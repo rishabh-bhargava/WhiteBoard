@@ -157,7 +157,9 @@ public class Canvas extends JPanel {
         public void mouseDragged(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
+            //long check = System.nanoTime();
             drawLineSegment(lastX, lastY, x, y);
+            //System.out.println(check - System.nanoTime());
             lastX = x;
             lastY = y;
         }
