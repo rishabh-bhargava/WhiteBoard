@@ -24,6 +24,7 @@ import javax.swing.SwingUtilities;
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private Image drawingBuffer;
+    Color colour = Color.red;
     
     
     /**
@@ -90,7 +91,7 @@ public class Canvas extends JPanel {
         final Dimension eyeSize = new Dimension(9, 9);
         final Dimension eyeOffset = new Dimension(smileBox.width/6, smileBox.height/6);
         
-        g.setColor(Color.BLACK);
+        g.setColor(colour);
         g.setStroke(new BasicStroke(smileStrokeWidth));
         
         // draw the smile -- an arc inscribed in smileBox, starting at -30 degrees (southeast)
@@ -117,7 +118,7 @@ public class Canvas extends JPanel {
     private void drawLineSegment(int x1, int y1, int x2, int y2) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         
-        g.setColor(Color.BLACK);
+        g.setColor(colour);
         g.drawLine(x1, y1, x2, y2);
         
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
@@ -176,18 +177,18 @@ public class Canvas extends JPanel {
     /*
      * Main program. Make a window containing a Canvas.
      */
-//    public static void main(String[] args) {
-//        // set up the UI (on the event-handling thread)
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {                
-//                JFrame window = new JFrame("Freehand Canvas");
-//                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//                window.setLayout(new BorderLayout());
-//                Canvas canvas = new Canvas(800, 600);
-//                window.add(canvas, BorderLayout.CENTER);
-//                window.pack();
-//                window.setVisible(true);
-//            }
-//        });
-//    }
+    public static void main(String[] args) {
+        // set up the UI (on the event-handling thread)
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {                
+                JFrame window = new JFrame("Freehand Canvas");
+                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                window.setLayout(new BorderLayout());
+                Canvas canvas = new Canvas(800, 600);
+                window.add(canvas, BorderLayout.CENTER);
+                window.pack();
+                window.setVisible(true);
+            }
+        });
+    }
 }
