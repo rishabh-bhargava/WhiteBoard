@@ -174,18 +174,18 @@ public class Canvas extends JPanel {
     /*
      * Main program. Make a window containing a Canvas.
      */
-    public static void main(String[] args) {
-        // set up the UI (on the event-handling thread)
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                JFrame window = new JFrame("Freehand Canvas");
-                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                window.setLayout(new BorderLayout());
-                Canvas canvas = new Canvas(800, 600);
-                window.add(canvas, BorderLayout.CENTER);
-                window.pack();
-                window.setVisible(true);
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        // set up the UI (on the event-handling thread)
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {                
+//                JFrame window = new JFrame("Freehand Canvas");
+//                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//                window.setLayout(new BorderLayout());
+//                Canvas canvas = new Canvas(800, 600);
+//                window.add(canvas, BorderLayout.CENTER);
+//                window.pack();
+//                window.setVisible(true);
+//            }
+//        });
+//    }
 }
