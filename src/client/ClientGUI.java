@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 
 import javax.swing.GroupLayout;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -21,11 +22,17 @@ public class ClientGUI extends JFrame {
         BorderLayout layout = new BorderLayout();
         this.setSize(350, 450);
         cp.setLayout(layout);
-//        layout.setAutoCreateGaps(true);
-//        layout.setAutoCreateContainerGaps(true);
         
         Canvas canvas = new Canvas(800, 600);
         this.add(canvas, BorderLayout.CENTER);
+
+        JButton eraser = new JButton("Erase");
+        JButton paintbrush = new JButton("Paint");
+        
+//        BorderLayout 
+//        this.add(eraser, BorderLayout.EAST);
+//        this.add(paintbrush, BorderLayout.EAST);
+        
         this.pack();
 
     }
