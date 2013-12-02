@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private Image drawingBuffer;
-    Color colour = Color.red;
+    private Color colour = Color.red;
     
     
     /**
@@ -133,6 +133,11 @@ public class Canvas extends JPanel {
         DrawingController controller = new DrawingController();
         addMouseListener(controller);
         addMouseMotionListener(controller);
+    }
+    
+    public void setColour(Color c)
+    {
+    	this.colour = c;
     }
     
     /*
