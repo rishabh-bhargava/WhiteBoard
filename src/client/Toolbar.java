@@ -1,6 +1,5 @@
 package client;
 
-import canvas.Canvas;
 
 public class Toolbar {
     Canvas canvas;
