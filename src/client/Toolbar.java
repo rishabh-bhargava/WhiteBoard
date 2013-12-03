@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -81,6 +82,8 @@ public class Toolbar extends JPanel
         	colourButtons[i].setName(mainColours[i].toString());
         	colourButtons[i].setBackground(mainColours[i]);
         	colourButtons[i].addActionListener(colourListeners);
+        	//Preferred size doesn't work for some reason
+        	colourButtons[i].setPreferredSize(new Dimension(20, 20));
         	if(i<4)
         	{
         		coloursTopS.addComponent(colourButtons[i]);
