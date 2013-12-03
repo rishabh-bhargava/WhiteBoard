@@ -17,7 +17,10 @@ public class WhiteboardManager {
         return whiteboards.containsKey(name);
     }
     
-    public synchronized Whiteboard createWhiteboard(String name) {
+    public synchronized Whiteboard createWhiteboard(String name) throws ClientException {
+        if(whiteboards.containsKey(name)) {
+            throw new ClientException("Duplicate whiteboard name.");
+        }
         Whiteboard whiteboard = new Whiteboard(name);
         whiteboards.put(name, whiteboard);
         return whiteboard;

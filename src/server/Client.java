@@ -1,14 +1,16 @@
 package server;
+import java.awt.Color;
 import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class Client extends Thread {
+public class Client extends Thread implements Comparable<Client> {
     private final Socket socket;
     private final WhiteboardManager manager;
     private boolean connected = true; // The connection dies when this becomes false.
     private String username = null;
     private Whiteboard whiteboard;
+    private PrintWriter out = null;
 
     public Client(WhiteboardManager manager, Socket socket) {
         this.socket = socket;
@@ -18,7 +20,6 @@ public class Client extends Thread {
     @Override
     public void run() {
         BufferedReader in = null;
-        PrintWriter out = null;
         try {
             in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -30,7 +31,7 @@ public class Client extends Thread {
                     out.println("ERROR " + e.getMessage());
                 }
                 if (output != null) {
-                    out.println(output);
+                    sendMessage(output);
                 }
                 if(!connected) {
                     break;
@@ -39,6 +40,9 @@ public class Client extends Thread {
         } catch(IOException e) {
             
         } finally {
+            if(whiteboard != null){
+                whiteboard.removeUser(this);
+            }
             if(out != null) out.close();
             if(in != null) {
                 try {
@@ -54,6 +58,10 @@ public class Client extends Thread {
             }
 //            server.removeClient(this);
         }
+    }
+    
+    public synchronized void sendMessage(String message) {
+        out.println(message);
     }
     
     public String handleRequest(String line) throws ClientException {
@@ -79,12 +87,16 @@ public class Client extends Thread {
             return handleQuit(args);
         case "join":
             return handleJoin(args);
+        case "create":
+            return handleCreate(args);
+        case "draw":
+            return handleDraw(args);
         default:
             return handleUnknownCommand(command);
         }
     }
     
-    public String handleHello(String args[]) throws ClientException {
+    private String handleHello(String args[]) throws ClientException {
         if(username != null) {
             throw new ClientException("Already said hello.");
         }
@@ -95,12 +107,12 @@ public class Client extends Thread {
         return "HELLO " + strJoin(manager.getWhiteboardNames(), " ");
     }
     
-    public String handleQuit(String args[]) {
+    private String handleQuit(String args[]) {
         connected = false;
         return "GOODBYE";
     }
     
-    public String handleJoin(String args[]) throws ClientException {
+    private String handleJoin(String args[]) throws ClientException {
         checkRegistered();
         if(args.length < 1) {
             throw new ClientException("Must provide whiteboard to join.");
@@ -116,7 +128,39 @@ public class Client extends Thread {
         }
     }
     
-    public String handleUnknownCommand(String command) {
+    private String handleCreate(String args[]) throws ClientException {
+        checkRegistered();
+        if(args.length < 1) {
+            throw new ClientException("Must specify a whiteboard name.");
+        }
+        synchronized(manager) {
+            Whiteboard oldWhiteboard = whiteboard;
+            whiteboard = manager.createWhiteboard(args[0]);
+            whiteboard.addUser(this);
+            if(oldWhiteboard != null) {
+                whiteboard.removeUser(this);
+            }
+        }
+        return "WHITEBOARD " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames(), " ");
+    }
+    
+    private String handleDraw(String[] args) throws ClientException {
+        if(args.length < 1) {
+            throw new ClientException("Must specify a colour to draw in.");
+        }
+        if(args.length % 4 != 1) {
+            throw new ClientException("Must specify a set of start/end coordinate pairs");
+        }
+        List<LineSegment> segments = new ArrayList<>();
+        for(int i = 1; i < args.length; i += 4) {
+            segments.add(new LineSegment(Integer.parseInt(args[i]), Integer.parseInt(args[i+1]), Integer.parseInt(args[i+2]), Integer.parseInt(args[i+3])));
+        }
+        Color colour = Color.decode(args[0]);
+        whiteboard.draw(colour, segments, this);
+        return "";
+    }
+    
+    private String handleUnknownCommand(String command) {
         return "ERROR " + command + " not recognised.";
     }
     
@@ -135,6 +179,11 @@ public class Client extends Thread {
         if(username == null) {
             throw new ClientException("Must register before using command.");
         }
+    }
+    
+    
+    public String getUsername() {
+        return username;
     }
 
     @Override
@@ -166,5 +215,10 @@ public class Client extends Thread {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public int compareTo(Client o) {
+        return username.compareTo(o.username);
     }
 }
