@@ -1,6 +1,10 @@
 package client;
 
-import javax.swing.*;
+import java.awt.FlowLayout;
+
+import javax.swing.GroupLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 
 public class Toolbar extends JPanel
@@ -11,7 +15,7 @@ public class Toolbar extends JPanel
     
     public Toolbar() 
     {
-    	GroupLayout layout = new GroupLayout(this.getTopLevelAncestor());
+    	GroupLayout layout = new GroupLayout(this);
     	
         paintButton = new JButton("Paint");
         paintButton.setName("paintButton");
@@ -19,16 +23,16 @@ public class Toolbar extends JPanel
         eraseButton = new JButton("Erase");
         eraseButton.setName("eraseButton");
         
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        	.addGroup(layout.createSequentialGroup()
-        		.addComponent(paintButton)
-        		.addComponent(eraseButton)));
+        this.setLayout(layout);
+        
+        layout.setHorizontalGroup(layout.createSequentialGroup()
+        	.addComponent(paintButton)
+        	.addComponent(eraseButton));
         
         layout.setVerticalGroup(layout.createSequentialGroup()
         	.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
         		.addComponent(paintButton)
         		.addComponent(eraseButton)));
-
         
     }
     
