@@ -10,9 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 public class ClientGUI extends JFrame 
-{
-	boolean isErasing;
-    
+{   
 
     Canvas canvas;
     Toolbar toolbar;
