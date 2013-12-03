@@ -25,12 +25,8 @@ public class ClientGUI extends JFrame {
         Canvas canvas = new Canvas(800, 600);
         this.add(canvas, BorderLayout.CENTER);
 
-        JButton eraser = new JButton("Erase");
-        JButton paintbrush = new JButton("Paint");
-        
-//        BorderLayout 
-//        this.add(eraser, BorderLayout.EAST);
-//        this.add(paintbrush, BorderLayout.EAST);
+        Toolbar toolbar = new Toolbar();
+        this.add(toolbar, BorderLayout.EAST);
         
         this.pack();
 
