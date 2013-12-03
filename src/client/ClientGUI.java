@@ -15,7 +15,6 @@ public class ClientGUI extends JFrame
 
     private Canvas canvas;
     private Toolbar toolbar;
-//    private
     
     public ClientGUI() {
         super("Whiteboard");

@@ -82,17 +82,16 @@ public class Toolbar extends JPanel
         	colourButtons[i].setName(mainColours[i].toString());
         	colourButtons[i].setBackground(mainColours[i]);
         	colourButtons[i].addActionListener(colourListeners);
-        	//Preferred size doesn't work for some reason
-        	colourButtons[i].setPreferredSize(new Dimension(20, 20));
+
         	if(i<4)
         	{
-        		coloursTopS.addComponent(colourButtons[i]);
-        		coloursTopP.addComponent(colourButtons[i]);
+        		coloursTopS.addComponent(colourButtons[i], 30, 30, 30).addGap(2);
+        		coloursTopP.addComponent(colourButtons[i], 30, 30, 30).addGap(2);
         	}
         	else
         	{
-        		coloursBottomS.addComponent(colourButtons[i]);
-        		coloursBottomP.addComponent(colourButtons[i]);
+        		coloursBottomS.addComponent(colourButtons[i], 30, 30, 30).addGap(2);
+        		coloursBottomP.addComponent(colourButtons[i], 30, 30, 30).addGap(2);
         	}
         }
         
@@ -114,8 +113,8 @@ public class Toolbar extends JPanel
         		.addComponent(eraseButton)).addGap(20)
         	.addComponent(brushThicknessLabel).addGap(5)
         	.addComponent(brushThickness).addGap(20)
-        	.addComponent(pickColourLabel)
-        	.addGroup(coloursTopP)
+        	.addComponent(pickColourLabel).addGap(5)
+        	.addGroup(coloursTopP).addGap(2)
         	.addGroup(coloursBottomP)
         	);
         
