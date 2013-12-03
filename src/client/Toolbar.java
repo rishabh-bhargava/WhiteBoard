@@ -82,7 +82,7 @@ public class Toolbar extends JPanel
 		@Override
 		public void stateChanged(ChangeEvent arg0) 
 		{
-						
+			client.setBrushStroke(brushThickness.getValue() + 1);
 		}
     	   
        });        
