@@ -7,28 +7,31 @@ import java.awt.Container;
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 public class ClientGUI extends JFrame 
 {   
 
-    Canvas canvas;
-    Toolbar toolbar;
+    private Canvas canvas;
+    private Toolbar toolbar;
+//    private
     
     public ClientGUI() {
         super("Whiteboard");
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         Container cp = this.getContentPane();
         BorderLayout layout = new BorderLayout();
-        this.setSize(350, 450);
         cp.setLayout(layout);
         
         canvas = new Canvas(800, 600);
         this.add(canvas, BorderLayout.CENTER);
 
         toolbar = new Toolbar(this);
+        JPanel leftAlignedToolbar = new JPanel(new BorderLayout());
+        leftAlignedToolbar.add(toolbar, BorderLayout.WEST);
         
-        this.add(toolbar, BorderLayout.EAST);
+        this.add(leftAlignedToolbar, BorderLayout.EAST);
         
         this.pack();        
 

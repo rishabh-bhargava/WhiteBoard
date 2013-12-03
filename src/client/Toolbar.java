@@ -51,7 +51,7 @@ public class Toolbar extends JPanel
         
         this.setLayout(layout);
         
-        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.CENTER)
         	//TODO: Add a gap properly here
         	.addGroup(layout.createSequentialGroup().addGap(10)
         		.addComponent(paintButton).addGap(10)
