@@ -26,7 +26,7 @@ public class Canvas extends JPanel {
     private Image drawingBuffer;
     private Color colour = Color.red;
     private boolean isErasing = false;
-    BasicStroke brushStroke;
+    BasicStroke brushStroke = new BasicStroke(1);
     
     /**
      * Make a canvas.
