@@ -28,6 +28,7 @@ public class Toolbar extends JPanel
         	.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
         		.addComponent(paintButton)
         		.addComponent(eraseButton)));
+
         
     }
     
