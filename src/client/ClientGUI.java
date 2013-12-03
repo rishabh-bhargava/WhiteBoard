@@ -41,6 +41,10 @@ public class ClientGUI extends JFrame
         canvas.isErasing(b);
     }
     
+    public void setBrushStroke(int num) {
+        canvas.setBrushStroke(num);
+    }
+    
     /*
      * Instantiate GUI JFrame in a separate thread from main.
      */
