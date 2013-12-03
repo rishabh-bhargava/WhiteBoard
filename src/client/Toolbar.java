@@ -1,15 +1,15 @@
 package client;
 
 import javax.swing.JButton;
+import javax.swing.JPanel;
 
 
-public class Toolbar {
+public class Toolbar extends JPanel {
     
     
     public Toolbar() {
 
-        JButton paintButton = new JButton();
-        JButton eraseButton = new JButton();
+        
         
         
         
