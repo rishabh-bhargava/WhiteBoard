@@ -1,6 +1,7 @@
 package client;
 
-import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -12,9 +13,13 @@ public class Toolbar extends JPanel
     private final JButton paintButton;
     private final JButton eraseButton;
     
+    private final ClientGUI client;
     
-    public Toolbar() 
+    
+    public Toolbar(ClientGUI clientGUI) 
     {
+    	client = clientGUI;
+    	
     	GroupLayout layout = new GroupLayout(this);
     	
         paintButton = new JButton("Paint");
@@ -33,6 +38,28 @@ public class Toolbar extends JPanel
         	.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
         		.addComponent(paintButton)
         		.addComponent(eraseButton)));
+        
+        paintButton.addActionListener(new ActionListener()
+        {
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				client.isErasing = false;
+			}
+        	
+        });
+        
+        eraseButton.addActionListener(new ActionListener()
+        {
+
+			@Override
+			public void actionPerformed(ActionEvent e) 
+			{
+				client.isErasing = true;
+				
+			}
+        	
+        });
         
     }
     

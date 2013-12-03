@@ -10,8 +10,9 @@ import javax.swing.SwingUtilities;
 
 
 
-public class ClientGUI extends JFrame {
-    
+public class ClientGUI extends JFrame 
+{
+	boolean isErasing;
     
     
     public ClientGUI() {
@@ -25,7 +26,7 @@ public class ClientGUI extends JFrame {
         Canvas canvas = new Canvas(800, 600);
         this.add(canvas, BorderLayout.CENTER);
 
-        Toolbar toolbar = new Toolbar();
+        Toolbar toolbar = new Toolbar(this);
         this.add(toolbar, BorderLayout.EAST);
         
         this.pack();
