@@ -123,6 +123,7 @@ public class Canvas extends JPanel {
             g.setColor(colour);
         } else {
             g.setColor(Color.WHITE);
+//            g.setStroke(brushStroke.get);
         }
         g.drawLine(x1, y1, x2, y2);
         
