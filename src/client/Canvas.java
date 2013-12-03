@@ -177,16 +177,20 @@ public class Canvas extends JPanel {
         public void mouseDragged(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
-            //long check = System.nanoTime();
             drawLineSegment(lastX, lastY, x, y);
-            //System.out.println(check - System.nanoTime());
             lastX = x;
             lastY = y;
         }
 
         // Ignore all these other mouse events.
         public void mouseMoved(MouseEvent e) { }
-        public void mouseClicked(MouseEvent e) { }
+        public void mouseClicked(MouseEvent e) {
+            int x = e.getX();
+            int y = e.getY();
+            drawLineSegment(lastX, lastY, x, y);
+            lastX = x;
+            lastY = y;
+        }
         public void mouseReleased(MouseEvent e) { }
         public void mouseEntered(MouseEvent e) { }
         public void mouseExited(MouseEvent e) { }

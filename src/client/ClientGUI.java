@@ -15,6 +15,7 @@ public class ClientGUI extends JFrame
 
     private Canvas canvas;
     private Toolbar toolbar;
+    private WhiteboardBar topbar;
     
     public ClientGUI() {
         super("Whiteboard");
@@ -27,10 +28,10 @@ public class ClientGUI extends JFrame
         this.add(canvas, BorderLayout.CENTER);
 
         toolbar = new Toolbar(this);
-        JPanel leftAlignedToolbar = new JPanel(new BorderLayout());
-        leftAlignedToolbar.add(toolbar, BorderLayout.WEST);
-        
-        this.add(leftAlignedToolbar, BorderLayout.EAST);
+        this.add(toolbar, BorderLayout.EAST);
+
+        topbar = new WhiteboardBar();
+        this.add(topbar, BorderLayout.NORTH);
         
         this.pack();        
 

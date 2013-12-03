@@ -31,7 +31,8 @@ public class Toolbar extends JPanel
     
     public Toolbar(ClientGUI clientGUI) 
     {
-    	client = clientGUI;
+    	this.client = clientGUI;
+    	this.setPreferredSize(new Dimension(220,500));
     	
     	GroupLayout layout = new GroupLayout(this);
     	
@@ -72,14 +73,16 @@ public class Toolbar extends JPanel
      	   @Override
      	   public void actionPerformed(ActionEvent e) 
      	   {
-     		   //client.canvas.setColour();
+     		   String action = e.getActionCommand();
+     		   System.out.println(action);
+     	       client.setColor(new Color(new Integer(action)));
      	   }
         };
         
         for(int i = 0; i<8; i++)
         {
         	colourButtons[i] = new JButton();
-        	colourButtons[i].setName(mainColours[i].toString());
+        	colourButtons[i].setActionCommand(new Integer(mainColours[i].getRGB()).toString());
         	colourButtons[i].setBackground(mainColours[i]);
         	colourButtons[i].addActionListener(colourListeners);
 
@@ -97,7 +100,7 @@ public class Toolbar extends JPanel
         
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
         	//TODO: Add a gap properly here
-        	.addGroup(layout.createSequentialGroup().addGap(10)
+        	.addGroup(layout.createSequentialGroup()
         		.addComponent(paintButton).addGap(10)
         		.addComponent(eraseButton))
         	.addComponent(brushThicknessLabel)
