@@ -1,6 +1,7 @@
 package client;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Container;
 
 import javax.swing.GroupLayout;
@@ -11,8 +12,8 @@ import javax.swing.SwingUtilities;
 
 
 public class ClientGUI extends JFrame {
-    
-    
+    Canvas canvas;
+    Toolbar toolbar;
     
     public ClientGUI() {
         super("Whiteboard");
@@ -22,14 +23,21 @@ public class ClientGUI extends JFrame {
         this.setSize(350, 450);
         cp.setLayout(layout);
         
-        Canvas canvas = new Canvas(800, 600);
+        canvas = new Canvas(800, 600);
         this.add(canvas, BorderLayout.CENTER);
 
-        Toolbar toolbar = new Toolbar();
+        toolbar = new Toolbar(this);
         this.add(toolbar, BorderLayout.EAST);
         
-        this.pack();
+        this.pack();        
 
+    }
+    
+    public void setColor(Color c) {
+        canvas.setColour(c);
+    }
+    public void isErasing(boolean b) {
+        canvas.isErasing(b);
     }
     
     /*
