@@ -1,10 +1,12 @@
 package client;
 
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
@@ -19,8 +21,9 @@ public class Toolbar extends JPanel
     private static final int MIN_THICKNESS = 0;
     private static final int MAX_THICKNESS = 20;
     
-    private final ClientGUI client;
+    private final JLabel brushThicknessLabel;
     
+    private final ClientGUI client;    
     
     public Toolbar(ClientGUI clientGUI) 
     {
@@ -29,9 +32,12 @@ public class Toolbar extends JPanel
     	GroupLayout layout = new GroupLayout(this);
     	
         paintButton = new JButton("Paint");
+        paintButton.setBackground(Color.black);
+        paintButton.setForeground(Color.white);
         paintButton.setName("paintButton");
         
         eraseButton = new JButton("Erase");
+        eraseButton.setBackground(Color.white);
         eraseButton.setName("eraseButton");
         
         brushThickness = new JSlider(JSlider.HORIZONTAL, MIN_THICKNESS, MAX_THICKNESS, 0);
@@ -40,18 +46,25 @@ public class Toolbar extends JPanel
         brushThickness.setPaintLabels(true);
         brushThickness.setPaintLabels(true);
         
+        brushThicknessLabel = new JLabel();
+        brushThicknessLabel.setText("Set Brush Thickness:");
+        
         this.setLayout(layout);
         
-        layout.setHorizontalGroup(layout.createSequentialGroup()
-        	.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-        		.addComponent(paintButton)
-        		.addComponent(brushThickness))        	
-        	.addComponent(eraseButton));
+        layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+        	//TODO: Add a gap properly here
+        	.addGroup(layout.createSequentialGroup().addGap(10)
+        		.addComponent(paintButton).addGap(10)
+        		.addComponent(eraseButton))
+        	.addComponent(brushThicknessLabel)
+        	.addComponent(brushThickness)
+        	);
         
-        layout.setVerticalGroup(layout.createSequentialGroup()
+        layout.setVerticalGroup(layout.createSequentialGroup().addGap(10)
         	.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
         		.addComponent(paintButton)
-        		.addComponent(eraseButton))
+        		.addComponent(eraseButton)).addGap(20)
+        	.addComponent(brushThicknessLabel).addGap(5)
         	.addComponent(brushThickness));
         
         paintButton.addActionListener(new ActionListener()
@@ -66,7 +79,6 @@ public class Toolbar extends JPanel
         
         eraseButton.addActionListener(new ActionListener()
         {
-
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
@@ -78,12 +90,11 @@ public class Toolbar extends JPanel
         
        brushThickness.addChangeListener(new ChangeListener()
        {
-
-		@Override
-		public void stateChanged(ChangeEvent arg0) 
-		{
-			client.setBrushStroke(brushThickness.getValue() + 1);
-		}
+    	   @Override
+    	   public void stateChanged(ChangeEvent arg0) 
+    	   {
+    		   client.setBrushStroke(brushThickness.getValue() + 1);
+    	   }
     	   
        });        
     }
