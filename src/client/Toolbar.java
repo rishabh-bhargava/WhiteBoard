@@ -1,10 +1,13 @@
 package client;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.ParallelGroup;
+import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -22,6 +25,7 @@ public class Toolbar extends JPanel
     private static final int MAX_THICKNESS = 20;
     
     private final JLabel brushThicknessLabel;
+    private final JLabel pickColourLabel;
     
     private final ClientGUI client;    
     
@@ -45,11 +49,52 @@ public class Toolbar extends JPanel
         brushThickness.setMinorTickSpacing(1);
         brushThickness.setPaintLabels(true);
         brushThickness.setPaintLabels(true);
+        brushThickness.setName("brushThickness");
         
         brushThicknessLabel = new JLabel();
         brushThicknessLabel.setText("Set Brush Thickness:");
+        brushThicknessLabel.setName("brushThicknessLabel");
+        
+        pickColourLabel = new JLabel("Pick Colour!");
+        pickColourLabel.setName("pickColourLabel");
         
         this.setLayout(layout);
+        
+        SequentialGroup coloursTopS = layout.createSequentialGroup();
+        ParallelGroup coloursTopP = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        SequentialGroup coloursBottomS = layout.createSequentialGroup();
+        ParallelGroup coloursBottomP = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        Color[] mainColours = {Color.black, Color.blue, Color.green, Color.magenta, Color.red, Color.yellow, Color.orange, Color.gray};
+        JButton[] colourButtons = new JButton[8];
+        
+        ActionListener colourListeners = new ActionListener()
+        {
+     	   @Override
+     	   public void actionPerformed(ActionEvent e) 
+     	   {
+     		   //client.canvas.setColour();
+     	   }
+        };
+        
+        for(int i = 0; i<8; i++)
+        {
+        	colourButtons[i] = new JButton();
+        	colourButtons[i].setName(mainColours[i].toString());
+        	colourButtons[i].setBackground(mainColours[i]);
+        	colourButtons[i].addActionListener(colourListeners);
+        	//Preferred size doesn't work for some reason
+        	colourButtons[i].setPreferredSize(new Dimension(20, 20));
+        	if(i<4)
+        	{
+        		coloursTopS.addComponent(colourButtons[i]);
+        		coloursTopP.addComponent(colourButtons[i]);
+        	}
+        	else
+        	{
+        		coloursBottomS.addComponent(colourButtons[i]);
+        		coloursBottomP.addComponent(colourButtons[i]);
+        	}
+        }
         
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
         	//TODO: Add a gap properly here
@@ -58,6 +103,9 @@ public class Toolbar extends JPanel
         		.addComponent(eraseButton))
         	.addComponent(brushThicknessLabel)
         	.addComponent(brushThickness)
+        	.addComponent(pickColourLabel)
+        	.addGroup(coloursTopS)
+        	.addGroup(coloursBottomS)
         	);
         
         layout.setVerticalGroup(layout.createSequentialGroup().addGap(10)
@@ -65,7 +113,11 @@ public class Toolbar extends JPanel
         		.addComponent(paintButton)
         		.addComponent(eraseButton)).addGap(20)
         	.addComponent(brushThicknessLabel).addGap(5)
-        	.addComponent(brushThickness));
+        	.addComponent(brushThickness).addGap(20)
+        	.addComponent(pickColourLabel)
+        	.addGroup(coloursTopP)
+        	.addGroup(coloursBottomP)
+        	);
         
         paintButton.addActionListener(new ActionListener()
         {
@@ -95,8 +147,10 @@ public class Toolbar extends JPanel
     	   {
     		   client.setBrushStroke(brushThickness.getValue() + 1);
     	   }
-    	   
-       });        
+       });
+       
+       
+       
     }
     
     
