@@ -9,6 +9,7 @@ import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
@@ -26,6 +27,8 @@ public class Toolbar extends JPanel
     
     private final JLabel brushThicknessLabel;
     private final JLabel pickColourLabel;
+    
+    private final JButton colourButton;
     
     private final ClientGUI client;    
     
@@ -58,6 +61,9 @@ public class Toolbar extends JPanel
         
         pickColourLabel = new JLabel("Pick Colour!");
         pickColourLabel.setName("pickColourLabel");
+        
+        colourButton = new JButton("Choose funky colours!");
+        colourButton.setName("clourButton");
         
         this.setLayout(layout);
         
@@ -107,7 +113,8 @@ public class Toolbar extends JPanel
         	.addComponent(brushThickness)
         	.addComponent(pickColourLabel)
         	.addGroup(coloursTopS)
-        	.addGroup(coloursBottomS)
+        	.addGroup(coloursBottomS).addGap(2)
+        	.addComponent(colourButton)
         	);
         
         layout.setVerticalGroup(layout.createSequentialGroup().addGap(10)
@@ -118,7 +125,8 @@ public class Toolbar extends JPanel
         	.addComponent(brushThickness).addGap(20)
         	.addComponent(pickColourLabel).addGap(5)
         	.addGroup(coloursTopP).addGap(2)
-        	.addGroup(coloursBottomP)
+        	.addGroup(coloursBottomP).addGap(2)
+        	.addComponent(colourButton)
         	);
         
         paintButton.addActionListener(new ActionListener()
@@ -151,7 +159,19 @@ public class Toolbar extends JPanel
     	   }
        });
        
-       
+       colourButton.addActionListener(new ActionListener()
+       {
+
+    	   @Override
+    	   public void actionPerformed(ActionEvent e) 
+    	   {
+    		   Color newColour = JColorChooser.showDialog(null, "Choose a colour!", Color.black);
+    		   if(newColour == null)
+    			   return;
+    		   else
+    			   client.setColor(newColour);
+    	   }
+		});
        
     }
     
