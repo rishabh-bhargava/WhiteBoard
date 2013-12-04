@@ -1,16 +1,17 @@
 package server;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.*;
+import java.util.List;
 
 import javax.xml.bind.DatatypeConverter;
 
 public class Whiteboard {
     private final String name;
-    private Set<Client> users = new TreeSet<Client>();
+    private Set<Client> users = new TreeSet<>();
     private BufferedImage image = new BufferedImage(800, 600, ColorSpace.TYPE_RGB);
     
     public Whiteboard(String name) {
@@ -27,12 +28,15 @@ public class Whiteboard {
         return name;
     }
     
-    public synchronized void draw(Color colour, List<LineSegment> segments, Client sender) {
+    public synchronized void draw(Color colour, float strokeSize, List<LineSegment> segments, Client sender) {
         StringBuilder message = new StringBuilder();
         message.append("DRAW ");
         message.append(colour.getRGB());
+        message.append(" ");
+        message.append(Float.toString(strokeSize));
+        image.createGraphics().setColor(colour);
+        image.createGraphics().setStroke(new BasicStroke(strokeSize));
         for(LineSegment segment : segments) {
-            image.getGraphics().setColor(colour);
             image.getGraphics().drawLine(segment.x1, segment.y1, segment.x2, segment.y2);
             message.append(" ");
             message.append(segment.x1);
@@ -73,6 +77,6 @@ public class Whiteboard {
         for(Client user : users) {
             list.add(user.getUsername());
         }
-        return list.toArray(new String[0]);
+        return list.toArray(new String[list.size()]);
     }
 }

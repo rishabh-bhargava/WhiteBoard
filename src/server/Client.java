@@ -69,7 +69,7 @@ public class Client extends Thread implements Comparable<Client> {
             // Why would this ever happen?
             return null;
         }
-        if(line == "") {
+        if(line.equals("")) {
             // Ignore blank lines.
             return null;
         }
@@ -145,18 +145,19 @@ public class Client extends Thread implements Comparable<Client> {
     }
     
     private String handleDraw(String[] args) throws ClientException {
-        if(args.length < 1) {
-            throw new ClientException("Must specify a colour to draw in.");
+        if(args.length < 2) {
+            throw new ClientException("Must specify a colour and stroke size.");
         }
-        if(args.length % 4 != 1) {
+        if(args.length % 4 != 2) {
             throw new ClientException("Must specify a set of start/end coordinate pairs");
         }
         List<LineSegment> segments = new ArrayList<>();
-        for(int i = 1; i < args.length; i += 4) {
+        for(int i = 2; i < args.length; i += 4) {
             segments.add(new LineSegment(Integer.parseInt(args[i]), Integer.parseInt(args[i+1]), Integer.parseInt(args[i+2]), Integer.parseInt(args[i+3])));
         }
         Color colour = Color.decode(args[0]);
-        whiteboard.draw(colour, segments, this);
+        float strokeSize = Float.parseFloat(args[1]);
+        whiteboard.draw(colour, strokeSize, segments, this);
         return "";
     }
     
