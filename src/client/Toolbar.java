@@ -88,7 +88,7 @@ public class Toolbar extends JPanel
         for(int i = 0; i<8; i++)
         {
         	colourButtons[i] = new JButton();
-        	colourButtons[i].setActionCommand(new Integer(mainColours[i].getRGB()).toString());
+        	colourButtons[i].setActionCommand(Integer.toString(mainColours[i].getRGB()));
         	colourButtons[i].setBackground(mainColours[i]);
         	colourButtons[i].addActionListener(colourListeners);
 

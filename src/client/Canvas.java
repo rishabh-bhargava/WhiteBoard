@@ -1,5 +1,7 @@
 package client;
 
+import shared.LineSegment;
+
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -12,6 +14,8 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.*;
+import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -23,9 +27,10 @@ import javax.swing.SwingUtilities;
  */
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
-    private Image drawingBuffer;
+    private BufferedImage drawingBuffer;
     private Color colour = Color.red;
     private boolean isErasing = false;
+    private CanvasDelegate delegate = null;
     BasicStroke brushStroke = new BasicStroke(1);
     
     /**
@@ -35,10 +40,17 @@ public class Canvas extends JPanel {
      */
     public Canvas(int width, int height) {
         this.setPreferredSize(new Dimension(width, height));
+        this.setMinimumSize(new Dimension(width, height));
+        this.setMaximumSize(new Dimension(width, height));
+        this.setSize(width, height);
         addDrawingController();
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
+    }
+
+    public void setDelegate(CanvasDelegate delegate) {
+        this.delegate = delegate;
     }
     
     /**
@@ -60,7 +72,7 @@ public class Canvas extends JPanel {
      * Make the drawing buffer and draw some starting content for it.
      */
     private void makeDrawingBuffer() {
-        drawingBuffer = createImage(getWidth(), getHeight());
+        drawingBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
         fillWithWhite();
     }
     
@@ -115,7 +127,7 @@ public class Canvas extends JPanel {
      * Draw a line between two points (x1, y1) and (x2, y2), specified in
      * pixels relative to the upper-left corner of the drawing buffer.
      */
-    private void drawLineSegment(int x1, int y1, int x2, int y2) {
+    private synchronized void drawLineSegment(int x1, int y1, int x2, int y2) {
         Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
         g.setStroke(brushStroke);
         
@@ -129,6 +141,16 @@ public class Canvas extends JPanel {
         
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
+        this.repaint();
+    }
+
+    public synchronized void drawLines(Color colour, float strokeWidth, List<LineSegment> segments) {
+        Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
+        g.setStroke(new BasicStroke(strokeWidth));
+        g.setColor(colour);
+        for(LineSegment segment : segments) {
+            g.drawLine(segment.x1, segment.y1, segment.x2, segment.y2);
+        }
         this.repaint();
     }
     
@@ -152,6 +174,18 @@ public class Canvas extends JPanel {
     
     public void setBrushStroke(int num) {
         this.brushStroke = new BasicStroke(num);
+    }
+
+    public void setBitmap(byte[] bitmap) {
+        // Because this can get called very early.
+        if (drawingBuffer == null) {
+            makeDrawingBuffer();
+        }
+        DataBufferByte buffer = new DataBufferByte(bitmap, bitmap.length);
+        SampleModel model = new PixelInterleavedSampleModel(buffer.getDataType(), getWidth(), getHeight(), 3, 3 * getWidth(), new int[]{2,1,0});
+        Raster raster = Raster.createRaster(model, buffer, new Point(0, 0));
+        drawingBuffer.setData(raster);
+        repaint();
     }
     
     /*
@@ -178,6 +212,9 @@ public class Canvas extends JPanel {
             int x = e.getX();
             int y = e.getY();
             drawLineSegment(lastX, lastY, x, y);
+            if(delegate != null) {
+                delegate.drewLine(isErasing ? Color.WHITE : colour, brushStroke.getLineWidth(), lastX, lastY, x, y);
+            }
             lastX = x;
             lastY = y;
         }
@@ -188,6 +225,9 @@ public class Canvas extends JPanel {
             int x = e.getX();
             int y = e.getY();
             drawLineSegment(lastX, lastY, x, y);
+            if(delegate != null) {
+                delegate.drewLine(isErasing ? Color.WHITE : colour, brushStroke.getLineWidth(), lastX, lastY, x, y);
+            }
             lastX = x;
             lastY = y;
         }

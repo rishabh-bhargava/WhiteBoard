@@ -1,4 +1,6 @@
 package server;
+import shared.LineSegment;
+
 import java.awt.Color;
 import java.io.*;
 import java.util.*;
@@ -104,7 +106,7 @@ public class Client extends Thread implements Comparable<Client> {
             throw new ClientException("Must provide a username to HELLO.");
         }
         username = args[0];
-        return "HELLO " + strJoin(manager.getWhiteboardNames(), " ");
+        return "HELLO " + strJoin(manager.getWhiteboardNames());
     }
     
     private String handleQuit(String args[]) {
@@ -124,7 +126,7 @@ public class Client extends Thread implements Comparable<Client> {
             }
             whiteboard = manager.getWhiteboard(whiteboardName);
             whiteboard.addUser(this);
-            return "WHITEBOARD " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames(), " ");
+            return "WHITEBOARD " + whiteboard.getName() + " " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames());
         }
     }
     
@@ -141,7 +143,7 @@ public class Client extends Thread implements Comparable<Client> {
                 whiteboard.removeUser(this);
             }
         }
-        return "WHITEBOARD " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames(), " ");
+        return "WHITEBOARD " + whiteboard.getName() + " " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames());
     }
     
     private String handleDraw(String[] args) throws ClientException {
@@ -166,11 +168,11 @@ public class Client extends Thread implements Comparable<Client> {
     }
     
     // Why can't Java do this?
-    public static String strJoin(String[] aArr, String sSep) {
+    public static String strJoin(String[] aArr) {
         StringBuilder sbStr = new StringBuilder();
         for (int i = 0, il = aArr.length; i < il; i++) {
             if (i > 0)
-                sbStr.append(sSep);
+                sbStr.append(" ");
             sbStr.append(aArr[i]);
         }
         return sbStr.toString();

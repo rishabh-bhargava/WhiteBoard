@@ -1,14 +1,13 @@
 package client;
 
+import shared.LineSegment;
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.util.List;
 
-import javax.swing.GroupLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 public class ClientGUI extends JFrame 
 {   
@@ -19,7 +18,7 @@ public class ClientGUI extends JFrame
     
     public ClientGUI() {
         super("Whiteboard");
-        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Container cp = this.getContentPane();
         BorderLayout layout = new BorderLayout();
         cp.setLayout(layout);
@@ -33,8 +32,7 @@ public class ClientGUI extends JFrame
         topbar = new WhiteboardBar();
         this.add(topbar, BorderLayout.NORTH);
         
-        this.pack();        
-
+        this.pack();
     }
     
     public void setColor(Color c) {
@@ -47,17 +45,28 @@ public class ClientGUI extends JFrame
     public void setBrushStroke(int num) {
         canvas.setBrushStroke(num);
     }
+
+    public void setCanvasBitmap(byte[] bitmap) {
+        canvas.setBitmap(bitmap);
+    }
+
+    public void setCanvasDelegate(CanvasDelegate delegate) {
+        canvas.setDelegate(delegate);
+    }
+
+    public void drawLines(Color colour, float strokeWidth, List<LineSegment> segments) {
+        canvas.drawLines(colour, strokeWidth, segments);
+    }
+
+    public void setWhiteboardName(String name) {
+        topbar.setName(name);
+    }
     
     /*
      * Instantiate GUI JFrame in a separate thread from main.
      */
     public static void main(final String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                ClientGUI main = new ClientGUI();
-                main.setVisible(true);
-            }
-        });
+        new WhiteboardController();
     }
     
     

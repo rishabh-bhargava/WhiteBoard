@@ -13,6 +13,7 @@ public class WhiteboardServer {
     }
     
     public void serve() throws IOException {
+        //noinspection InfiniteLoopStatement
         while(true) {
             Socket socket = serverSocket.accept();
             Client client = new Client(manager, socket);

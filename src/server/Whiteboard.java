@@ -1,7 +1,8 @@
 package server;
 
+import shared.LineSegment;
+
 import java.awt.*;
-import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
 import java.util.*;
@@ -12,10 +13,15 @@ import javax.xml.bind.DatatypeConverter;
 public class Whiteboard {
     private final String name;
     private Set<Client> users = new TreeSet<>();
-    private BufferedImage image = new BufferedImage(800, 600, ColorSpace.TYPE_RGB);
+    private BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_3BYTE_BGR);
+    private Graphics2D graphics;
     
     public Whiteboard(String name) {
         this.name = name;
+        System.out.println(getName());
+        graphics = image.createGraphics();
+        graphics.setColor(Color.WHITE);
+        graphics.fillRect(0, 0, image.getWidth(), image.getHeight());
     }
     
     public synchronized String getSerializedImage() {
@@ -34,10 +40,10 @@ public class Whiteboard {
         message.append(colour.getRGB());
         message.append(" ");
         message.append(Float.toString(strokeSize));
-        image.createGraphics().setColor(colour);
-        image.createGraphics().setStroke(new BasicStroke(strokeSize));
+        graphics.setColor(colour);
+        graphics.setStroke(new BasicStroke(strokeSize));
         for(LineSegment segment : segments) {
-            image.getGraphics().drawLine(segment.x1, segment.y1, segment.x2, segment.y2);
+            graphics.drawLine(segment.x1, segment.y1, segment.x2, segment.y2);
             message.append(" ");
             message.append(segment.x1);
             message.append(" ");

@@ -6,7 +6,8 @@ public class WhiteboardManager {
     private Map<String, Whiteboard> whiteboards = new HashMap<>();
     
     public synchronized String[] getWhiteboardNames() {
-        return whiteboards.keySet().toArray(new String[0]);
+        Set<String> var = whiteboards.keySet();
+        return var.toArray(new String[var.size()]);
     }
     
     public synchronized Whiteboard getWhiteboard(String name) {
