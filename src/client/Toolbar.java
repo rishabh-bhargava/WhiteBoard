@@ -42,10 +42,12 @@ public class Toolbar extends JPanel
         paintButton = new JButton("Paint");
         paintButton.setBackground(Color.black);
         paintButton.setForeground(Color.white);
+        paintButton.setOpaque(true);
         paintButton.setName("paintButton");
         
         eraseButton = new JButton("Erase");
         eraseButton.setBackground(Color.white);
+        eraseButton.setOpaque(true);
         eraseButton.setName("eraseButton");
         
         brushThickness = new JSlider(JSlider.HORIZONTAL, MIN_THICKNESS, MAX_THICKNESS, 0);
@@ -90,6 +92,7 @@ public class Toolbar extends JPanel
         	colourButtons[i] = new JButton();
         	colourButtons[i].setActionCommand(Integer.toString(mainColours[i].getRGB()));
         	colourButtons[i].setBackground(mainColours[i]);
+        	colourButtons[i].setOpaque(true);
         	colourButtons[i].addActionListener(colourListeners);
 
         	if(i<4)
