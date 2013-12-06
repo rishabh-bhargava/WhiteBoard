@@ -5,6 +5,7 @@ import shared.LineSegment;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -44,6 +45,10 @@ public class Canvas extends JPanel {
         this.setMaximumSize(new Dimension(width, height));
         this.setSize(width, height);
         addDrawingController();
+        
+        //This changes the cursor to a crosshair cursor--do we want to?
+        //this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+        
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
@@ -220,7 +225,7 @@ public class Canvas extends JPanel {
         }
 
         // Ignore all these other mouse events.
-        public void mouseMoved(MouseEvent e) { }
+        public void mouseMoved(MouseEvent e) {}
         public void mouseClicked(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
