@@ -62,8 +62,9 @@ public class WhiteboardClient extends Thread {
         }
         try {
             socket.close();
-        } catch(IOException e) {
-            // meh
+        } catch(IOException e) 
+        {
+            e.printStackTrace();
         }
     }
 
