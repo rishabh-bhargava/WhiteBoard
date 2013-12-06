@@ -19,6 +19,7 @@ public class WhiteboardClient extends Thread {
     private final Socket socket;
     private final WhiteboardClientDelegate delegate;
     private PrintWriter out;
+    private int drawingSequenceNumber = 0;
 
     private SortedSet<String> whiteboards = new TreeSet<>();
 
@@ -87,6 +88,10 @@ public class WhiteboardClient extends Thread {
                 break;
             case "draw":
                 handleDraw(args);
+                break;
+            case "ack":
+                handleACK(args);
+                break;
         }
     }
 
@@ -95,6 +100,12 @@ public class WhiteboardClient extends Thread {
         whiteboards.clear();
         Collections.addAll(whiteboards, args);
         delegate.whiteboardListUpdated(whiteboards.toArray(new String[whiteboards.size()]));
+    }
+
+    private void handleACK(String[] args) {
+        if(drawingSequenceNumber == Integer.parseInt(args[0])) {
+            delegate.serverACK();
+        }
     }
 
     private void handleWhiteboard(String[] args) {
@@ -133,7 +144,7 @@ public class WhiteboardClient extends Thread {
     }
 
     public void sendLine(Color colour, float strokeWidth, int x1, int y1, int x2, int y2) {
-        sendMessage("DRAW", Integer.toString(colour.getRGB()), Float.toString(strokeWidth),
+        sendMessage("DRAW", Integer.toString(++drawingSequenceNumber), Integer.toString(colour.getRGB()), Float.toString(strokeWidth),
                 Integer.toString(x1),  Integer.toString(y1),  Integer.toString(x2),  Integer.toString(y2));
     }
 

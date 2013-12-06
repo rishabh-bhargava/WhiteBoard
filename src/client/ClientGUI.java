@@ -12,7 +12,7 @@ import javax.swing.*;
 public class ClientGUI extends JFrame 
 {   
 
-    private Canvas canvas;
+    private WhiteboardCanvasGroup canvas;
     private Toolbar toolbar;
     private WhiteboardBar topbar;
     
@@ -23,7 +23,7 @@ public class ClientGUI extends JFrame
         BorderLayout layout = new BorderLayout();
         cp.setLayout(layout);
         
-        canvas = new Canvas(800, 600);
+        canvas = new WhiteboardCanvasGroup();
         this.add(canvas, BorderLayout.CENTER);
 
         toolbar = new Toolbar(this);
@@ -38,8 +38,8 @@ public class ClientGUI extends JFrame
     public void setColor(Color c) {
         canvas.setColour(c);
     }
-    public void isErasing(boolean b) {
-        canvas.isErasing(b);
+    public void setErasing(boolean b) {
+        canvas.setErasing(b);
     }
     
     public void setBrushStroke(int num) {
@@ -60,6 +60,10 @@ public class ClientGUI extends JFrame
 
     public void setWhiteboardName(String name) {
         topbar.setName(name);
+    }
+
+    public void clearDrawingCanvas() {
+        canvas.clearDrawingCanvas();
     }
     
     /*

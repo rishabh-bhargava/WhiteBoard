@@ -68,6 +68,11 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
     }
 
     @Override
+    public void serverACK() {
+        gui.clearDrawingCanvas();
+    }
+
+    @Override
     public void whiteboardPicked(String name) {
         client.joinWhiteboard(name);
     }
