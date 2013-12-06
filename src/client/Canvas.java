@@ -9,9 +9,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.*;
 import java.util.List;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 /**
  * Canvas represents a drawing surface that allows the user to draw
@@ -41,6 +39,10 @@ public class Canvas extends JPanel {
         setOpaque(opaque);
         addDrawingController();
         setBackground(new Color(255, 0, 0, 0));
+        
+        //This changes the cursor to a crosshair cursor--do we want to?
+        //this.setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
@@ -62,7 +64,7 @@ public class Canvas extends JPanel {
         }
         Graphics2D graphics = (Graphics2D)g.create();
         graphics.setComposite(AlphaComposite.Src);
-        graphics.setColor(new Color(255,0,255,0));
+        graphics.setColor(new Color(255, 0, 255, 0));
         graphics.setBackground(new Color(0, 255, 0, 0));
         super.paintComponent(g);
         if(opaque) { // get rid of this if to enable local echo. Flickers.
@@ -100,7 +102,7 @@ public class Canvas extends JPanel {
      * pixels relative to the upper-left corner of the drawing buffer.
      */
     private synchronized void drawLineSegment(int x1, int y1, int x2, int y2) {
-        drawingGraphics.setBackground(new Color(0,255,0,0));
+        drawingGraphics.setBackground(new Color(0, 255, 0, 0));
         drawingGraphics.setStroke(brushStroke);
         drawingGraphics.setComposite(AlphaComposite.SrcOver);
         Color ourColour = new Color(colour.getRed(), colour.getGreen(), colour.getBlue(), 255);
@@ -201,7 +203,7 @@ public class Canvas extends JPanel {
         }
 
         // Ignore all these other mouse events.
-        public void mouseMoved(MouseEvent e) { }
+        public void mouseMoved(MouseEvent e) {}
         public void mouseClicked(MouseEvent e) {
             int x = e.getX();
             int y = e.getY();
