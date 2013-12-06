@@ -40,14 +40,9 @@ public class Toolbar extends JPanel
     	GroupLayout layout = new GroupLayout(this);
     	
         paintButton = new JButton("Paint");
-        paintButton.setBackground(Color.black);
-        paintButton.setForeground(Color.white);
-        paintButton.setOpaque(true);
         paintButton.setName("paintButton");
         
         eraseButton = new JButton("Erase");
-        eraseButton.setBackground(Color.white);
-        eraseButton.setOpaque(true);
         eraseButton.setName("eraseButton");
         
         brushThickness = new JSlider(JSlider.HORIZONTAL, MIN_THICKNESS, MAX_THICKNESS, 0);
