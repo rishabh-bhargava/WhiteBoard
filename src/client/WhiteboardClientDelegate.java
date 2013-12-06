@@ -12,4 +12,5 @@ public interface WhiteboardClientDelegate {
     public void joinedWhiteboard(String whiteboard, byte bitmap[], String usernames[]);
     public void serverDrew(Color colour, float strokeWidth, List<LineSegment> segments);
     public void serverError(String message);
+    public void serverACK();
 }

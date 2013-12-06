@@ -13,7 +13,7 @@ import javax.xml.bind.DatatypeConverter;
 public class Whiteboard {
     private final String name;
     private Set<Client> users = new TreeSet<>();
-    private BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_3BYTE_BGR);
+    private BufferedImage image = new BufferedImage(800, 600, BufferedImage.TYPE_4BYTE_ABGR);
     private Graphics2D graphics;
     
     public Whiteboard(String name) {
@@ -34,7 +34,7 @@ public class Whiteboard {
         return name;
     }
     
-    public synchronized void draw(Color colour, float strokeSize, List<LineSegment> segments, Client sender) {
+    public synchronized void draw(Color colour, float strokeSize, List<LineSegment> segments) {
         StringBuilder message = new StringBuilder();
         message.append("DRAW ");
         message.append(colour.getRGB());
@@ -55,7 +55,6 @@ public class Whiteboard {
         }
         String stringMessage = message.toString();
         for(Client client : users) {
-            if(client == sender) continue;
             client.sendMessage(stringMessage);
         }
     }

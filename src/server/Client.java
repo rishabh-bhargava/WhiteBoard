@@ -147,20 +147,20 @@ public class Client extends Thread implements Comparable<Client> {
     }
     
     private String handleDraw(String[] args) throws ClientException {
-        if(args.length < 2) {
-            throw new ClientException("Must specify a colour and stroke size.");
+        if(args.length < 3) {
+            throw new ClientException("Must specify a colour, stroke size and sequence number.");
         }
-        if(args.length % 4 != 2) {
+        if(args.length % 4 != 3) {
             throw new ClientException("Must specify a set of start/end coordinate pairs");
         }
         List<LineSegment> segments = new ArrayList<>();
-        for(int i = 2; i < args.length; i += 4) {
+        for(int i = 3; i < args.length; i += 4) {
             segments.add(new LineSegment(Integer.parseInt(args[i]), Integer.parseInt(args[i+1]), Integer.parseInt(args[i+2]), Integer.parseInt(args[i+3])));
         }
-        Color colour = Color.decode(args[0]);
-        float strokeSize = Float.parseFloat(args[1]);
-        whiteboard.draw(colour, strokeSize, segments, this);
-        return "";
+        Color colour = Color.decode(args[1]);
+        float strokeSize = Float.parseFloat(args[2]);
+        whiteboard.draw(colour, strokeSize, segments);
+        return "ACK " + args[0];
     }
     
     private String handleUnknownCommand(String command) {

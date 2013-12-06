@@ -2,15 +2,7 @@ package client;
 
 import shared.LineSegment;
 
-import java.awt.BasicStroke;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -28,22 +20,27 @@ import javax.swing.SwingUtilities;
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
     private BufferedImage drawingBuffer;
+    private Graphics2D drawingGraphics;
     private Color colour = Color.red;
     private boolean isErasing = false;
+    private boolean opaque = false;
     private CanvasDelegate delegate = null;
     BasicStroke brushStroke = new BasicStroke(1);
-    
+
     /**
      * Make a canvas.
      * @param width width in pixels
      * @param height height in pixels
      */
-    public Canvas(int width, int height) {
+    public Canvas(int width, int height, boolean opaque) {
         this.setPreferredSize(new Dimension(width, height));
         this.setMinimumSize(new Dimension(width, height));
         this.setMaximumSize(new Dimension(width, height));
         this.setSize(width, height);
+        this.opaque = opaque;
+        setOpaque(opaque);
         addDrawingController();
+        setBackground(new Color(255, 0, 0, 0));
         // note: we can't call makeDrawingBuffer here, because it only
         // works *after* this canvas has been added to a window.  Have to
         // wait until paintComponent() is first called.
@@ -63,27 +60,35 @@ public class Canvas extends JPanel {
         if (drawingBuffer == null) {
             makeDrawingBuffer();
         }
-        
+        Graphics2D graphics = (Graphics2D)g.create();
+        graphics.setComposite(AlphaComposite.Src);
+        graphics.setColor(new Color(255,0,255,0));
+        graphics.setBackground(new Color(0, 255, 0, 0));
+        super.paintComponent(g);
+        if(opaque) { // get rid of this if to enable local echo. Flickers.
+//            graphics.fillRect(0, 0, getWidth(), getHeight());
+            graphics.drawImage(drawingBuffer, 0, 0, new Color(0, 255, 0, 0), null);
         // Copy the drawing buffer to the screen.
-        g.drawImage(drawingBuffer, 0, 0, null);
+        }
+
     }
     
     /*
      * Make the drawing buffer and draw some starting content for it.
      */
     private void makeDrawingBuffer() {
-        drawingBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
-        fillWithWhite();
+        drawingBuffer = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        drawingGraphics = drawingBuffer.createGraphics();
+        if(opaque)
+            fillWithWhite();
     }
     
     /*
      * Make the drawing buffer entirely white.
      */
     private void fillWithWhite() {
-        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-
-        g.setColor(Color.WHITE);
-        g.fillRect(0,  0,  getWidth(), getHeight());
+        drawingGraphics.setColor(Color.WHITE);
+        drawingGraphics.fillRect(0,  0,  getWidth(), getHeight());
         
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
@@ -91,53 +96,22 @@ public class Canvas extends JPanel {
     }
     
     /*
-     * Draw a happy smile on the drawing buffer.
-     */
-//    private void drawSmile() {
-//        final Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-//
-//        // all positions and sizes below are in pixels
-//        final Rectangle smileBox = new Rectangle(20, 20, 100, 100); // x, y, width, height
-//        final Point smileCenter = new Point(smileBox.x + smileBox.width/2, smileBox.y + smileBox.height/2);
-//        final int smileStrokeWidth = 3;
-//        final Dimension eyeSize = new Dimension(9, 9);
-//        final Dimension eyeOffset = new Dimension(smileBox.width/6, smileBox.height/6);
-//        
-//        g.setColor(colour);
-//        g.setStroke(new BasicStroke(smileStrokeWidth));
-//        
-//        // draw the smile -- an arc inscribed in smileBox, starting at -30 degrees (southeast)
-//        // and covering 120 degrees
-//        g.drawArc(smileBox.x, smileBox.y, smileBox.width, smileBox.height, -30, -120);
-//        
-//        // draw some eyes to make it look like a smile rather than an arc
-//        for (int side: new int[] { -1, 1 }) {
-//            g.fillOval(smileCenter.x + side * eyeOffset.width - eyeSize.width/2,
-//                       smileCenter.y - eyeOffset.height - eyeSize.width/2,
-//                       eyeSize.width,
-//                       eyeSize.height);
-//        }
-//        
-//        // IMPORTANT!  every time we draw on the internal drawing buffer, we
-//        // have to notify Swing to repaint this component on the screen.
-//        this.repaint();
-//    }
-    
-    /*
      * Draw a line between two points (x1, y1) and (x2, y2), specified in
      * pixels relative to the upper-left corner of the drawing buffer.
      */
     private synchronized void drawLineSegment(int x1, int y1, int x2, int y2) {
-        Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-        g.setStroke(brushStroke);
+        drawingGraphics.setBackground(new Color(0,255,0,0));
+        drawingGraphics.setStroke(brushStroke);
+        drawingGraphics.setComposite(AlphaComposite.SrcOver);
+        Color ourColour = new Color(colour.getRed(), colour.getGreen(), colour.getBlue(), 255);
         
         if (!isErasing) {
-            g.setColor(colour);
+            drawingGraphics.setColor(ourColour);
         } else {
-            g.setColor(Color.WHITE);
+            drawingGraphics.setColor(Color.WHITE);
 //            g.setStroke(brushStroke.get);
         }
-        g.drawLine(x1, y1, x2, y2);
+        drawingGraphics.drawLine(x1, y1, x2, y2);
         
         // IMPORTANT!  every time we draw on the internal drawing buffer, we
         // have to notify Swing to repaint this component on the screen.
@@ -145,11 +119,10 @@ public class Canvas extends JPanel {
     }
 
     public synchronized void drawLines(Color colour, float strokeWidth, List<LineSegment> segments) {
-        Graphics2D g = (Graphics2D) drawingBuffer.getGraphics();
-        g.setStroke(new BasicStroke(strokeWidth));
-        g.setColor(colour);
+        drawingGraphics.setStroke(new BasicStroke(strokeWidth));
+        drawingGraphics.setColor(colour);
         for(LineSegment segment : segments) {
-            g.drawLine(segment.x1, segment.y1, segment.x2, segment.y2);
+            drawingGraphics.drawLine(segment.x1, segment.y1, segment.x2, segment.y2);
         }
         this.repaint();
     }
@@ -182,9 +155,17 @@ public class Canvas extends JPanel {
             makeDrawingBuffer();
         }
         DataBufferByte buffer = new DataBufferByte(bitmap, bitmap.length);
-        SampleModel model = new PixelInterleavedSampleModel(buffer.getDataType(), getWidth(), getHeight(), 3, 3 * getWidth(), new int[]{2,1,0});
+        SampleModel model = new PixelInterleavedSampleModel(buffer.getDataType(), getWidth(), getHeight(), 4, 4 * getWidth(), new int[]{3,2,1,0});
         Raster raster = Raster.createRaster(model, buffer, new Point(0, 0));
         drawingBuffer.setData(raster);
+        repaint();
+    }
+
+    public void clear() {
+        if(drawingBuffer == null) return;
+        drawingGraphics.setComposite(AlphaComposite.Src);
+        drawingGraphics.setColor(new Color(0,0,0,0));
+        drawingGraphics.fillRect(0, 0, getWidth(), getHeight());
         repaint();
     }
     
@@ -235,23 +216,4 @@ public class Canvas extends JPanel {
         public void mouseEntered(MouseEvent e) { }
         public void mouseExited(MouseEvent e) { }
     }
-    
-    
-    /*
-     * Main program. Make a window containing a Canvas.
-     */
-//    public static void main(String[] args) {
-//        // set up the UI (on the event-handling thread)
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {                
-//                JFrame window = new JFrame("Freehand Canvas");
-//                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//                window.setLayout(new BorderLayout());
-//                Canvas canvas = new Canvas(800, 600);
-//                window.add(canvas, BorderLayout.CENTER);
-//                window.pack();
-//                window.setVisible(true);
-//            }
-//        });
-//    }
 }

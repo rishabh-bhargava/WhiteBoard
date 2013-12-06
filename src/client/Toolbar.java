@@ -134,7 +134,7 @@ public class Toolbar extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				client.isErasing(false);
+				client.setErasing(false);
 			}
         	
         });
@@ -144,7 +144,7 @@ public class Toolbar extends JPanel
 			@Override
 			public void actionPerformed(ActionEvent e) 
 			{
-				client.isErasing(true);
+				client.setErasing(true);
 				
 			}
         	
