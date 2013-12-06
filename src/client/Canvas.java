@@ -29,6 +29,7 @@ public class Canvas extends JPanel {
      * Make a canvas.
      * @param width width in pixels
      * @param height height in pixels
+     * @param opaque opaque or not
      */
     public Canvas(int width, int height, boolean opaque) {
         this.setPreferredSize(new Dimension(width, height));
