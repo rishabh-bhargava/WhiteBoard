@@ -14,6 +14,9 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
     private ClientGUI gui = null;
     private boolean ready = false;
 
+    /**
+     * Instantiates WhiteboardClient in own thread
+     */
     public WhiteboardController() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -23,10 +26,20 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
         });
     }
 
+    /**
+     * Asks user for server address and username. Will not continue if server 
+     * address is empty string or null (user clicked cancel). Will display error
+     * if client tries to connect using the same username as another currently 
+     * connected client.
+     */
     private void driveWhiteboard() {
         String server = JOptionPane.showInputDialog("Give the server address", "localhost:6005");
-        String username = JOptionPane.showInputDialog("Enter a username");
-        client = new WhiteboardClient(this, server, username);
+        if (server.equals("")) {
+            JOptionPane.showMessageDialog(null, "Bad server address", "Bad server address", JOptionPane.ERROR_MESSAGE);
+        } else if (server != null) {
+            String username = JOptionPane.showInputDialog("Enter a username");
+            client = new WhiteboardClient(this, server, username);
+        }
     }
 
     @Override

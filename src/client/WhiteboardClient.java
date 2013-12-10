@@ -31,6 +31,9 @@ public class WhiteboardClient extends Thread {
     public WhiteboardClient(WhiteboardClientDelegate delegate, String server, String username) {
         super();
         this.username = username;
+        for (String s : this.getUsers()) {
+            System.out.println(s);
+        }
         this.server = server;
         this.delegate = delegate;
         this.socket = new Socket();
