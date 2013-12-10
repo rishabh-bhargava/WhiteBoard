@@ -10,9 +10,14 @@ import javax.swing.JTextField;
 
 public class WhiteboardBar extends JPanel 
 {
-    private final JTextField whiteboardName;
+	private static final long serialVersionUID = 1L;
+	
+	private final JTextField whiteboardName;
     private final JComboBox<String> userList;
     
+    /**
+     * WhiteboardBar constructor
+     */
     public WhiteboardBar() 
     {
         whiteboardName = new JTextField(20);
@@ -28,7 +33,11 @@ public class WhiteboardBar extends JPanel
         this.add(userList);
         
     }
-
+    
+    /**
+     * Set the name of the whiteboard
+     * @param name : String name of whiteboard
+     */
     public void setWhiteboardName(String name) 
     {
         whiteboardName.setText(name);
