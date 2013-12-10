@@ -128,8 +128,9 @@ public class WhiteboardClient extends Thread {
         whiteboards.add(args[0]); // This is harmless if it's already there; sets have no duplicates.
         users.clear();
         Collections.addAll(users, others);
-        List<String> w =  new ArrayList<String>(whiteboards);
-        delegate.joinedWhiteboard(name, bitmap, others, w);
+        String[] whiteboardarray = getWhiteboards();
+        List<String> whiteboardlist = new ArrayList<String>(Arrays.asList(whiteboardarray)); 
+        delegate.joinedWhiteboard(name, bitmap, others, whiteboardlist);
     }
 
     private void handleJoin(String[] args) {
