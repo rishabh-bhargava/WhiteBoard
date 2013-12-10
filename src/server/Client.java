@@ -125,6 +125,9 @@ public class Client extends Thread implements Comparable<Client> {
             if(!manager.hasWhiteboard(whiteboardName)) {
                 throw new ClientException("No such whiteboard.");
             }
+            if(whiteboard != null) {
+                whiteboard.removeUser(this);
+            }
             whiteboard = manager.getWhiteboard(whiteboardName);
             whiteboard.addUser(this);
             return "WHITEBOARD " + whiteboard.getName() + " " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames());
