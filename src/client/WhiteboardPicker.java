@@ -1,6 +1,7 @@
 package client;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +20,8 @@ public class WhiteboardPicker extends JFrame implements ActionListener {
 
         setTitle("Choose a whiteboard");
 
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+//        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         list = new JList<>(whiteboards);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
