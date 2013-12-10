@@ -49,6 +49,7 @@ public class WhiteboardBar extends JPanel
      */
     public void setUserList(List<String> users)
     {
+    	userList.removeAll();
     	for(String user : users)
     	{
     		userList.addItem(user);
