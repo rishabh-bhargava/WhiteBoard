@@ -112,6 +112,11 @@ public class ClientGUI extends JFrame
     	topbar.setUserList(users);
     }
     
+    public void setWhiteboardsList(List<String> whiteboards)
+    {
+    	topbar.setWhiteboardsList(whiteboards);
+    }
+    
     /*
      * Instantiate GUI JFrame in a separate thread from main.
      */
