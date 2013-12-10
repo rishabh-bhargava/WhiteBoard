@@ -99,5 +99,10 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
     public void drewLine(Color colour, float strokeWidth, int x1, int y1, int x2, int y2) {
         client.sendLine(colour, strokeWidth, x1, y1, x2, y2);
     }
+
+    @Override
+    public void requestedWhiteboardChange(String name) {
+        client.joinWhiteboard(name);
+    }
 }
 

@@ -15,6 +15,7 @@ public class ClientGUI extends JFrame
     private WhiteboardCanvasGroup canvas;
     private Toolbar toolbar;
     private WhiteboardBar topbar;
+    private CanvasDelegate delegate;
     
     public ClientGUI() {
         super("Whiteboard");
@@ -72,6 +73,7 @@ public class ClientGUI extends JFrame
      * @param delegate
      */
     public void setCanvasDelegate(CanvasDelegate delegate) {
+        this.delegate = delegate;
         canvas.setDelegate(delegate);
     }
     
