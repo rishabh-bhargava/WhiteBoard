@@ -81,7 +81,8 @@ public class ClientGUI extends JFrame
      * @param strokeWidth
      * @param segments
      */
-    public void drawLines(Color colour, float strokeWidth, List<LineSegment> segments) {
+    public void drawLines(Color colour, float strokeWidth, List<LineSegment> segments) 
+    {
         canvas.drawLines(colour, strokeWidth, segments);
     }
     
@@ -89,21 +90,33 @@ public class ClientGUI extends JFrame
      * Sets the whiteboard name in the whiteboard bar as the input string
      * @param name
      */
-    public void setWhiteboardName(String name) {
-        topbar.setName(name);
+    public void setWhiteboardName(String name) 
+    {
+        topbar.setWhiteboardName(name);
     }
     
     /**
      * Clears the drawing canvas
      */
-    public void clearDrawingCanvas() {
+    public void clearDrawingCanvas() 
+    {
         canvas.clearDrawingCanvas();
+    }
+    
+    /**
+     * Sets the list of current users in the topbar
+     * @param users : List of current users
+     */
+    public void setUserList(List<String> users)
+    {
+    	topbar.setUserList(users);
     }
     
     /*
      * Instantiate GUI JFrame in a separate thread from main.
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) 
+    {
         new WhiteboardController();
     }
     
