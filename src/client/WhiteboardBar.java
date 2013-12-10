@@ -43,11 +43,17 @@ public class WhiteboardBar extends JPanel
         whiteboardName.setText(name);
     }
     
+    /**
+     * Sets the userList by adding the items to the combo box
+     * @param users
+     */
     public void setUserList(List<String> users)
     {
+    	userList.removeAll();
     	for(String user : users)
     	{
     		userList.addItem(user);
     	}
+    	this.repaint();
     }
 }

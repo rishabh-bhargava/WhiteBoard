@@ -3,6 +3,7 @@ package client;
 import shared.LineSegment;
 
 import javax.swing.*;
+
 import java.awt.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,7 +15,9 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
     private WhiteboardPicker picker;
     private ClientGUI gui = null;
     private boolean ready = false;
-
+    
+//    private List<String> usersList = Collections.synchronizedList(new ArrayList<String>()); 
+    
     public WhiteboardController() {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -24,10 +27,31 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
         });
     }
 
+    /**
+     * Creates GUI dialogs that asks user for server address and username.
+     * If user hits cancel on either input dialogs, there will be no attempt
+     * made to connect to the server. Thread for that client is effectively 
+     * killed. 
+     * 
+     * Otherwise, we will attempt to establish a socket connection with the
+     * server using the given server address and username.
+     * 
+     * 
+     */
     private void driveWhiteboard() {
         String server = JOptionPane.showInputDialog("Give the server address", "localhost:6005");
-        String username = JOptionPane.showInputDialog("Enter a username");
-        client = new WhiteboardClient(this, server, username);
+        if (server != null) {
+            String username = JOptionPane.showInputDialog("Enter a username");
+            while (username != null) {
+                if (!usersList.contains(username)) { // change this to get method
+                    usersList.add(username);
+                    client = new WhiteboardClient(this, server, username);
+                    break;
+                } else {
+                    username = JOptionPane.showInputDialog("Username taken. Enter a different one");
+                }
+            }
+        }
     }
 
     @Override
