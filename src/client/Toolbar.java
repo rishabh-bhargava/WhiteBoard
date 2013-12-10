@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
@@ -12,9 +13,12 @@ import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JSlider;
+import javax.swing.JTable;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.table.DefaultTableModel;
 
 
 public class Toolbar extends JPanel
@@ -34,6 +38,8 @@ public class Toolbar extends JPanel
     private final JLabel pickColourLabel;
     
     private final JButton colourButton;
+    
+    private final JTable userTable;
     
     private final ClientGUI client;    
     
@@ -69,6 +75,9 @@ public class Toolbar extends JPanel
         
         colourButton = new JButton("Choose funky colours!");
         colourButton.setName("clourButton");
+        
+        userTable = new JTable(new UserTableModel());
+        JScrollPane userTableScrollpane = new JScrollPane(userTable);
         
         this.setLayout(layout);
         
@@ -127,7 +136,8 @@ public class Toolbar extends JPanel
         	.addComponent(pickColourLabel)
         	.addGroup(coloursTopS)
         	.addGroup(coloursBottomS).addGap(2)
-        	.addComponent(colourButton)
+        	.addComponent(colourButton).addGap(10)
+        	.addComponent(userTableScrollpane)
         	);
         
         layout.setVerticalGroup(layout.createSequentialGroup().addGap(10)
@@ -140,6 +150,7 @@ public class Toolbar extends JPanel
         	.addGroup(coloursTopP).addGap(2)
         	.addGroup(coloursBottomP).addGap(2)
         	.addComponent(colourButton)
+        	.addComponent(userTableScrollpane)
         	);
         
         /*
@@ -198,4 +209,32 @@ public class Toolbar extends JPanel
     	   }
 		});       
     }
+    
+    public void setUserList(List<String> users) {
+        Object[][] data = new Object[users.size()][1];
+        for (int i = 0; i < users.size(); i++) {
+            data[i][0] = users.get(i);
+        }
+        userTable.setModel(new UserTableModel(data));
+    }
+    
+    /**
+     * Custom table model for JTable to display list of connected users for
+     * current whiteboard.
+     *
+     */
+    private class UserTableModel extends DefaultTableModel {
+        private static final long serialVersionUID = 1L;
+        public UserTableModel() {
+            super(new Object[][] {}, new Object[] {"Current users"});
+        }
+        public UserTableModel(Object[][] data) {
+            super(data, new Object[] {"Current users"});
+        }
+        @Override
+        public boolean isCellEditable(int row, int col) {
+            return false;
+        }
+    }
+    
 }
