@@ -77,6 +77,8 @@ public class Toolbar extends JPanel
         colourButton.setName("clourButton");
         
         userTable = new JTable(new UserTableModel());
+        userTable.setRowSelectionAllowed(false);
+        userTable.setFocusable(false);
         JScrollPane userTableScrollpane = new JScrollPane(userTable);
         
         this.setLayout(layout);
@@ -136,7 +138,7 @@ public class Toolbar extends JPanel
         	.addComponent(pickColourLabel)
         	.addGroup(coloursTopS)
         	.addGroup(coloursBottomS).addGap(2)
-        	.addComponent(colourButton).addGap(10)
+        	.addComponent(colourButton)
         	.addComponent(userTableScrollpane)
         	);
         
@@ -149,7 +151,7 @@ public class Toolbar extends JPanel
         	.addComponent(pickColourLabel).addGap(5)
         	.addGroup(coloursTopP).addGap(2)
         	.addGroup(coloursBottomP).addGap(2)
-        	.addComponent(colourButton)
+        	.addComponent(colourButton).addGap(20)
         	.addComponent(userTableScrollpane)
         	);
         
@@ -210,6 +212,9 @@ public class Toolbar extends JPanel
 		});       
     }
     
+    /*
+     * Used by ClientGUI to update list of currently connected users
+     */
     public void setUserList(List<String> users) {
         Object[][] data = new Object[users.size()][1];
         for (int i = 0; i < users.size(); i++) {
@@ -220,8 +225,7 @@ public class Toolbar extends JPanel
     
     /**
      * Custom table model for JTable to display list of connected users for
-     * current whiteboard.
-     *
+     * current whiteboard
      */
     private class UserTableModel extends DefaultTableModel {
         private static final long serialVersionUID = 1L;
