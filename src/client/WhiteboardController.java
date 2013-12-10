@@ -104,6 +104,6 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
     @Override
     public void requestedWhiteboardChange(String name) {
         client.joinWhiteboard(name);
-    }
+    }    
 }
 
