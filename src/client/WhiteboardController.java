@@ -43,7 +43,7 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
         if (server != null) {
             String username = JOptionPane.showInputDialog("Enter a username");
             while (username != null) {
-                if (!usersList.contains(username)) {
+                if (!usersList.contains(username)) { // change this to get method
                     usersList.add(username);
                     client = new WhiteboardClient(this, server, username);
                     break;
