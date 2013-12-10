@@ -115,7 +115,7 @@ public class ClientGUI extends JFrame
     	toolbar.setUserList(users);
     }
     
-    public void setWhiteboardsList(List<String> whiteboards)
+    public void setWhiteboardsList(List <String> whiteboards)
     {
     	topbar.setWhiteboardsList(whiteboards);
     }

@@ -15,7 +15,6 @@ public class WhiteboardBar extends JPanel
 	private static final long serialVersionUID = 1L;
 	
 	private final JTextField whiteboardName;
-    private final JComboBox<String> userList;
     private final JComboBox<String> whiteboardsList;
     
     private CanvasDelegate delegate = null;
@@ -30,16 +29,11 @@ public class WhiteboardBar extends JPanel
         whiteboardName.setForeground(Color.GRAY);
         whiteboardName.setEnabled(false);
         
-        userList = new JComboBox<String>();
-        userList.setName("userList");
-        userList.setToolTipText("Click to see a list of users connected to this server");
-        
         whiteboardsList = new JComboBox<String>();
         whiteboardsList.setName("whiteboardsList");
         whiteboardsList.setToolTipText("Click to view and select a list of whiteboards hosted on the server");
         
         this.add(whiteboardName);
-        this.add(userList);
         this.add(whiteboardsList);
         
         whiteboardsList.addActionListener(new ActionListener()
@@ -66,20 +60,6 @@ public class WhiteboardBar extends JPanel
     public void setWhiteboardName(String name) 
     {
         whiteboardName.setText(name);
-    }
-    
-    /**
-     * Sets the userList by adding the items to the combo box
-     * @param users
-     */
-    public void setUserList(List<String> users)
-    {
-    	userList.removeAllItems();
-    	for(String user : users)
-    	{
-    		userList.addItem(user);
-    	}
-    	this.repaint();
     }
     
     public void setWhiteboardsList(List<String> whiteboards)
