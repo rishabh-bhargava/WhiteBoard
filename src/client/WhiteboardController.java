@@ -5,6 +5,8 @@ import shared.LineSegment;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class WhiteboardController implements WhiteboardClientDelegate, WhiteboardPickerDelegate, CanvasDelegate {
@@ -50,6 +52,18 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
             gui.setCanvasBitmap(bitmap);
             gui.setCanvasDelegate(this);
             gui.setWhiteboardName(whiteboard);
+            List<String> list = new ArrayList<>();
+            Collections.addAll(list, client.getUsers());
+            gui.setUserList(list);
+        }
+    }
+
+    @Override
+    public void userListChanged(String[] userList) {
+        if(gui != null) {
+            List<String> list = new ArrayList<>();
+            Collections.addAll(list, userList);
+            gui.setUserList(list);
         }
     }
 

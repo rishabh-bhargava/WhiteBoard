@@ -13,4 +13,5 @@ public interface WhiteboardClientDelegate {
     public void serverDrew(Color colour, float strokeWidth, List<LineSegment> segments);
     public void serverError(String message);
     public void serverACK();
+    public void userListChanged(String[] list);
 }

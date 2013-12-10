@@ -124,21 +124,24 @@ public class WhiteboardClient extends Thread {
         byte[] bitmap = DatatypeConverter.parseBase64Binary(args[1]);
         String others[] = Arrays.copyOfRange(args, 2, args.length);
         whiteboards.add(args[0]); // This is harmless if it's already there; sets have no duplicates.
-        delegate.joinedWhiteboard(name, bitmap, others);
         users.clear();
         Collections.addAll(users, others);
+        delegate.joinedWhiteboard(name, bitmap, others);
     }
 
     private void handleJoin(String[] args) {
         users.add(args[0]);
+        delegate.userListChanged(users.toArray(new String[users.size()]));
     }
 
     private void handlePart(String[] args) {
         users.remove(args[0]);
+        delegate.userListChanged(users.toArray(new String[users.size()]));
     }
 
     private void handleCreated(String[] args) {
         whiteboards.add(args[0]);
+        delegate.whiteboardListUpdated(whiteboards.toArray(new String[whiteboards.size()]));
     }
 
     private void handleError(String[] args) {
