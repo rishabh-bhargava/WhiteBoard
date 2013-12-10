@@ -88,6 +88,7 @@ public class Toolbar extends JPanel
         	colourButtons[i].setActionCommand(Integer.toString(mainColours[i].getRGB()));
         	colourButtons[i].setBackground(mainColours[i]);
         	colourButtons[i].setOpaque(true);
+        	colourButtons[i].setBorderPainted(false);
         	colourButtons[i].addActionListener(colourListeners);
 
         	if(i<4)
