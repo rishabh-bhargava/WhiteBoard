@@ -24,6 +24,11 @@ public class WhiteboardManager {
         }
         Whiteboard whiteboard = new Whiteboard(name);
         whiteboards.put(name, whiteboard);
+        for(Whiteboard board : whiteboards.values()) {
+            for(Client user : board.getUsers()) {
+                user.sendMessage("CREATED " + whiteboard.getName());
+            }
+        }
         return whiteboard;
     }
 }

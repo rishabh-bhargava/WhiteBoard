@@ -2,6 +2,7 @@ package client;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.util.List;
 
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
@@ -9,9 +10,14 @@ import javax.swing.JTextField;
 
 public class WhiteboardBar extends JPanel 
 {
-    private final JTextField whiteboardName;
-    private final JComboBox userList;
+	private static final long serialVersionUID = 1L;
+	
+	private final JTextField whiteboardName;
+    private final JComboBox<String> userList;
     
+    /**
+     * WhiteboardBar constructor
+     */
     public WhiteboardBar() 
     {
         whiteboardName = new JTextField(20);
@@ -19,7 +25,7 @@ public class WhiteboardBar extends JPanel
         whiteboardName.setForeground(Color.GRAY);
         whiteboardName.setEnabled(false);
         
-        userList = new JComboBox();
+        userList = new JComboBox<String>();
         userList.setName("userList");
         userList.setToolTipText("Click to see a list of users connected to this server");
         
@@ -27,8 +33,26 @@ public class WhiteboardBar extends JPanel
         this.add(userList);
         
     }
-
-    public void setName(String name) {
+    
+    /**
+     * Set the name of the whiteboard
+     * @param name : String name of whiteboard
+     */
+    public void setWhiteboardName(String name) 
+    {
         whiteboardName.setText(name);
+    }
+    
+    /**
+     * Sets the userList by adding the items to the combo box
+     * @param users
+     */
+    public void setUserList(List<String> users)
+    {
+    	for(String user : users)
+    	{
+    		userList.addItem(user);
+    	}
+    	this.repaint();
     }
 }

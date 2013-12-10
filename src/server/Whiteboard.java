@@ -74,7 +74,7 @@ public class Whiteboard {
     }
     
     public synchronized Client[] getUsers() {
-        return (Client[])users.toArray();
+        return users.toArray(new Client[users.size()]);
     }
     
     public synchronized String[] getUserNames() {

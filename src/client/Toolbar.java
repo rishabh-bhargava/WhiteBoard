@@ -19,7 +19,12 @@ import javax.swing.event.ChangeListener;
 
 public class Toolbar extends JPanel
 {
-    private final JButton paintButton;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private final JButton paintButton;
     private final JButton eraseButton;
     private final JSlider brushThickness;
     private static final int MIN_THICKNESS = 0;
@@ -32,6 +37,9 @@ public class Toolbar extends JPanel
     
     private final ClientGUI client;    
     
+    /**
+     * The Toolbar Constructor
+     */
     public Toolbar(ClientGUI clientGUI) 
     {
     	this.client = clientGUI;
@@ -64,13 +72,18 @@ public class Toolbar extends JPanel
         
         this.setLayout(layout);
         
+        //Adding the colour buttons to the layout
         SequentialGroup coloursTopS = layout.createSequentialGroup();
         ParallelGroup coloursTopP = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
         SequentialGroup coloursBottomS = layout.createSequentialGroup();
         ParallelGroup coloursBottomP = layout.createParallelGroup(GroupLayout.Alignment.LEADING);
+        //The primary colours added as buttons
         Color[] mainColours = {Color.black, Color.blue, Color.green, Color.magenta, Color.red, Color.yellow, Color.orange, Color.gray};
         JButton[] colourButtons = new JButton[8];
         
+        /*
+         * Listeners on the colour buttons
+         */
         ActionListener colourListeners = new ActionListener()
         {
      	   @Override
@@ -82,6 +95,7 @@ public class Toolbar extends JPanel
      	   }
         };
         
+        //Initialising the colour buttons
         for(int i = 0; i<8; i++)
         {
         	colourButtons[i] = new JButton();
@@ -128,6 +142,9 @@ public class Toolbar extends JPanel
         	.addComponent(colourButton)
         	);
         
+        /*
+         * Listener on the paint button
+         */
         paintButton.addActionListener(new ActionListener()
         {
 			@Override
@@ -138,6 +155,9 @@ public class Toolbar extends JPanel
         	
         });
         
+        /*
+         * Listener on the erase button
+         */
         eraseButton.addActionListener(new ActionListener()
         {
 			@Override
@@ -149,6 +169,9 @@ public class Toolbar extends JPanel
         	
         });
         
+       /*
+        * Listener on the brush thickness slider 
+        */
        brushThickness.addChangeListener(new ChangeListener()
        {
     	   @Override
@@ -158,23 +181,21 @@ public class Toolbar extends JPanel
     	   }
        });
        
+       /*
+        * Listener on the colour picker button
+        */
        colourButton.addActionListener(new ActionListener()
        {
-
     	   @Override
     	   public void actionPerformed(ActionEvent e) 
     	   {
+    		   //Colour chooser dialog box opens up
     		   Color newColour = JColorChooser.showDialog(null, "Choose a colour!", Color.black);
     		   if(newColour == null)
     			   return;
     		   else
     			   client.setColor(newColour);
     	   }
-		});
-       
+		});       
     }
-    
-    
-    
-    
 }
