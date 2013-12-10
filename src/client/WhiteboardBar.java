@@ -14,6 +14,7 @@ public class WhiteboardBar extends JPanel
 	
 	private final JTextField whiteboardName;
     private final JComboBox<String> userList;
+    private final JComboBox<String> whiteboardsList;
     
     /**
      * WhiteboardBar constructor
@@ -29,8 +30,13 @@ public class WhiteboardBar extends JPanel
         userList.setName("userList");
         userList.setToolTipText("Click to see a list of users connected to this server");
         
+        whiteboardsList = new JComboBox<String>();
+        whiteboardsList.setName("whiteboardsList");
+        whiteboardsList.setToolTipText("Click to view and select a list of whiteboards hosted on the server");
+        
         this.add(whiteboardName);
         this.add(userList);
+        this.add(whiteboardsList);
         
     }
     
@@ -53,6 +59,16 @@ public class WhiteboardBar extends JPanel
     	for(String user : users)
     	{
     		userList.addItem(user);
+    	}
+    	this.repaint();
+    }
+    
+    public void setWhiteboardsList(List<String> whiteboards)
+    {
+    	whiteboardsList.removeAll();
+    	for (String whiteboard : whiteboards)
+    	{
+    		whiteboardsList.addItem(whiteboard);
     	}
     	this.repaint();
     }
