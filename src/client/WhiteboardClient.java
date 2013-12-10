@@ -3,6 +3,7 @@ package client;
 import shared.LineSegment;
 
 import javax.xml.bind.DatatypeConverter;
+
 import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.*;
+import java.util.List;
 
 public class WhiteboardClient extends Thread {
     private final String server;
@@ -126,7 +128,8 @@ public class WhiteboardClient extends Thread {
         whiteboards.add(args[0]); // This is harmless if it's already there; sets have no duplicates.
         users.clear();
         Collections.addAll(users, others);
-        delegate.joinedWhiteboard(name, bitmap, others);
+        List<String> w =  new ArrayList<String>(whiteboards);
+        delegate.joinedWhiteboard(name, bitmap, others, w);
     }
 
     private void handleJoin(String[] args) {

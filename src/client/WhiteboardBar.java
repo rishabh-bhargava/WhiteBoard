@@ -2,6 +2,8 @@ package client;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.JComboBox;
@@ -15,6 +17,8 @@ public class WhiteboardBar extends JPanel
 	private final JTextField whiteboardName;
     private final JComboBox<String> userList;
     private final JComboBox<String> whiteboardsList;
+    
+    private CanvasDelegate delegate = null;
     
     /**
      * WhiteboardBar constructor
@@ -38,6 +42,21 @@ public class WhiteboardBar extends JPanel
         this.add(userList);
         this.add(whiteboardsList);
         
+        whiteboardsList.addActionListener(new ActionListener()
+        {	
+        	@Override
+			public void actionPerformed(ActionEvent e) 
+        	{
+				delegate.requestedWhiteboardChange(whiteboardsList.getSelectedItem().toString());			
+			}
+        	
+        });
+        
+    }
+    
+    public void setDelegate(CanvasDelegate del)
+    {
+    	this.delegate = del;
     }
     
     /**
@@ -55,7 +74,7 @@ public class WhiteboardBar extends JPanel
      */
     public void setUserList(List<String> users)
     {
-    	userList.removeAll();
+    	userList.removeAllItems();
     	for(String user : users)
     	{
     		userList.addItem(user);

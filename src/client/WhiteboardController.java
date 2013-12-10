@@ -43,7 +43,7 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
     }
 
     @Override
-    public void joinedWhiteboard(String whiteboard, byte[] bitmap, String[] usernames) {
+    public void joinedWhiteboard(String whiteboard, byte[] bitmap, String[] usernames, List<String> whiteboards) {
         if(!ready && gui == null) {
             ready = true;
             gui = new ClientGUI();
@@ -54,6 +54,7 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
             List<String> list = new ArrayList<>();
             Collections.addAll(list, client.getUsers());
             gui.setUserList(list);
+            gui.setWhiteboardsList(whiteboards);
         }
     }
 

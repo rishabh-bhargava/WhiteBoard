@@ -75,6 +75,7 @@ public class ClientGUI extends JFrame
     public void setCanvasDelegate(CanvasDelegate delegate) {
         this.delegate = delegate;
         canvas.setDelegate(delegate);
+        topbar.setDelegate(delegate);
     }
     
     /**
