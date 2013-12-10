@@ -93,7 +93,7 @@ public class WhiteboardBar extends JPanel
         whiteboardName.setText(name);
     }
     
-    public void setWhiteboardsList(List<String> whiteboards)
+    public void setWhiteboardsList(String[] whiteboards)
     {
     	whiteboardsList.removeAll();
     	for (String whiteboard : whiteboards)

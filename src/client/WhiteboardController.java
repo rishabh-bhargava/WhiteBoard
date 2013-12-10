@@ -52,6 +52,8 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
         if(!ready && gui == null) {
             System.out.println("Got some boards");
             picker = new WhiteboardPicker(this, boards);
+        } else if (gui != null) {
+            gui.setWhiteboardsList(boards);
         }
     }
 
@@ -67,7 +69,7 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
             List<String> list = new ArrayList<>();
             Collections.addAll(list, client.getUsers());
             gui.setUserList(list);
-            gui.setWhiteboardsList(whiteboards);
+            gui.setWhiteboardsList(whiteboards.toArray(new String[0]));
         }
     }
 

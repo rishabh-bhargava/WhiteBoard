@@ -113,6 +113,7 @@ public class WhiteboardClient extends Thread {
         whiteboards.clear();
         Collections.addAll(whiteboards, args);
         delegate.whiteboardListUpdated(whiteboards.toArray(new String[whiteboards.size()]));
+        
     }
 
     private void handleACK(String[] args) {
