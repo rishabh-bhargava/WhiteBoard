@@ -42,6 +42,7 @@ public class Client extends Thread implements Comparable<Client> {
         } catch(IOException e) {
             
         } finally {
+            manager.removeClient(this);
             if(whiteboard != null){
                 whiteboard.removeUser(this);
             }
@@ -58,7 +59,6 @@ public class Client extends Thread implements Comparable<Client> {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            server.removeClient(this);
         }
     }
     
@@ -106,6 +106,7 @@ public class Client extends Thread implements Comparable<Client> {
             throw new ClientException("Must provide a username to HELLO.");
         }
         username = args[0];
+        manager.addClient(this);
         return "HELLO " + strJoin(manager.getWhiteboardNames());
     }
     

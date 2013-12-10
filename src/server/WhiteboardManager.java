@@ -4,6 +4,7 @@ import java.util.*;
 
 public class WhiteboardManager {
     private Map<String, Whiteboard> whiteboards = new HashMap<>();
+    private Set<Client> clients = new HashSet<>();
     
     public synchronized String[] getWhiteboardNames() {
         Set<String> var = whiteboards.keySet();
@@ -30,5 +31,16 @@ public class WhiteboardManager {
             }
         }
         return whiteboard;
+    }
+
+    public synchronized void addClient(Client client) throws ClientException {
+        if(clients.contains(client)) {
+            throw new ClientException("Duplicate username.");
+        }
+        clients.add(client);
+    }
+
+    public synchronized  void removeClient(Client client) {
+        clients.remove(client);
     }
 }

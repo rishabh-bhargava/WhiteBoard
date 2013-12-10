@@ -5,6 +5,7 @@ import shared.LineSegment;
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
+import java.util.*;
 import java.util.List;
 
 public class WhiteboardController implements WhiteboardClientDelegate, WhiteboardPickerDelegate, CanvasDelegate {
