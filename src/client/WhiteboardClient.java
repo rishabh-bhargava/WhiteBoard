@@ -22,6 +22,7 @@ public class WhiteboardClient extends Thread {
     private int drawingSequenceNumber = 0;
 
     private SortedSet<String> whiteboards = new TreeSet<>();
+    private SortedSet<String> users = new TreeSet<>();
 
     private boolean connected = false;
 
@@ -93,6 +94,15 @@ public class WhiteboardClient extends Thread {
             case "ack":
                 handleACK(args);
                 break;
+            case "created":
+                handleCreated(args);
+                break;
+            case "join":
+                handleJoin(args);
+                break;
+            case "part":
+                handlePart(args);
+                break;
         }
     }
 
@@ -113,7 +123,22 @@ public class WhiteboardClient extends Thread {
         String name = args[0];
         byte[] bitmap = DatatypeConverter.parseBase64Binary(args[1]);
         String others[] = Arrays.copyOfRange(args, 2, args.length);
+        whiteboards.add(args[0]); // This is harmless if it's already there; sets have no duplicates.
         delegate.joinedWhiteboard(name, bitmap, others);
+        users.clear();
+        Collections.addAll(users, others);
+    }
+
+    private void handleJoin(String[] args) {
+        users.add(args[0]);
+    }
+
+    private void handlePart(String[] args) {
+        users.remove(args[0]);
+    }
+
+    private void handleCreated(String[] args) {
+        whiteboards.add(args[0]);
     }
 
     private void handleError(String[] args) {
@@ -147,6 +172,14 @@ public class WhiteboardClient extends Thread {
     public void sendLine(Color colour, float strokeWidth, int x1, int y1, int x2, int y2) {
         sendMessage("DRAW", Integer.toString(++drawingSequenceNumber), Integer.toString(colour.getRGB()), Float.toString(strokeWidth),
                 Integer.toString(x1),  Integer.toString(y1),  Integer.toString(x2),  Integer.toString(y2));
+    }
+
+    public String[] getUsers() {
+        return users.toArray(new String[users.size()]);
+    }
+
+    public String[] getWhiteboards() {
+        return whiteboards.toArray(new String[whiteboards.size()]);
     }
 
     private void connect() {
