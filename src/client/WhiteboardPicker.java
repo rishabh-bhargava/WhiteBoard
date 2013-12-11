@@ -85,10 +85,14 @@ public class WhiteboardPicker extends JFrame implements ActionListener {
         } else if(e.getSource() == createButton) {
             // Prompt for a name
             String name = JOptionPane.showInputDialog(this, "Create a new whiteboard:");
+            if(name == null)
+            	return;
             if(name.contains(" ")) {
                 JOptionPane.showMessageDialog(this, "Error", "Whiteboard names cannot contain spaces", JOptionPane.ERROR_MESSAGE);
-            } else {
-                delegate.whiteboardCreated(name);
+            } 
+            else 
+            {
+            	delegate.whiteboardCreated(name);
                 close();
             }
         }
