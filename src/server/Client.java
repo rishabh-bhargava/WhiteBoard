@@ -142,10 +142,10 @@ public class Client extends Thread implements Comparable<Client> {
         synchronized(manager) {
             Whiteboard oldWhiteboard = whiteboard;
             whiteboard = manager.createWhiteboard(args[0]);
-            whiteboard.addUser(this);
             if(oldWhiteboard != null) {
-                whiteboard.removeUser(this);
+                oldWhiteboard.removeUser(this);
             }
+            whiteboard.addUser(this);
         }
         return "WHITEBOARD " + whiteboard.getName() + " " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames());
     }
