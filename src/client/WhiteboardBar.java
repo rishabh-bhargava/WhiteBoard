@@ -6,13 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class WhiteboardBar extends JPanel 
 {
@@ -61,7 +55,9 @@ public class WhiteboardBar extends JPanel
         	@Override
 			public void actionPerformed(ActionEvent e) 
         	{
-				delegate.requestedWhiteboardChange(whiteboardsList.getSelectedItem().toString());			
+                if(delegate != null && whiteboardsList.getSelectedItem() != null
+                        && !whiteboardsList.getSelectedItem().toString().equals(whiteboardName.getText()))
+				    delegate.requestedWhiteboardChange(whiteboardsList.getSelectedItem().toString());
 			}
         	
         });
@@ -93,13 +89,20 @@ public class WhiteboardBar extends JPanel
         whiteboardName.setText(name);
     }
     
-    public void setWhiteboardsList(String[] whiteboards)
+    public void setWhiteboardsList(final String[] whiteboards)
     {
-    	whiteboardsList.removeAll();
-    	for (String whiteboard : whiteboards)
-    	{
-    		whiteboardsList.addItem(whiteboard);
-    	}
-    	this.repaint();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                whiteboardsList.removeAllItems();
+                for (String whiteboard : whiteboards) {
+                    System.out.println(whiteboard);
+                    whiteboardsList.addItem(whiteboard);
+                    if(whiteboard.equals(whiteboardName.getText())) {
+                        whiteboardsList.setSelectedItem(whiteboard);
+                    }
+                }
+            }
+        });
     }
 }

@@ -59,18 +59,20 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
 
     @Override
     public void joinedWhiteboard(String whiteboard, byte[] bitmap, String[] usernames, List<String> whiteboards) {
+        System.out.println("Joined whiteboard");
         if(!ready && gui == null) {
             ready = true;
             gui = new ClientGUI();
-            gui.setVisible(true);
-            gui.setCanvasBitmap(bitmap);
             gui.setCanvasDelegate(this);
-            gui.setWhiteboardName(whiteboard);
-            List<String> list = new ArrayList<>();
-            Collections.addAll(list, client.getUsers());
-            gui.setUserList(list);
+            gui.setVisible(true);
             gui.setWhiteboardsList(whiteboards.toArray(new String[0]));
         }
+
+        gui.setCanvasBitmap(bitmap);
+        gui.setWhiteboardName(whiteboard);
+        List<String> list = new ArrayList<>();
+        Collections.addAll(list, client.getUsers());
+        gui.setUserList(list);
     }
 
     @Override
