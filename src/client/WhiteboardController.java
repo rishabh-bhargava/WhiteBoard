@@ -28,18 +28,25 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
 
     /**
      * Asks user for server address and username. Will not continue if server 
-     * address is empty string or null (user clicked cancel). Will display error
-     * if client tries to connect using the same username as another currently 
-     * connected client.
+     * address is null (user clicked cancel).
      */
     private void driveWhiteboard() {
         String server = JOptionPane.showInputDialog("Give the server address", "localhost:6005");
-        if (server.equals("")) {
-            JOptionPane.showMessageDialog(null, "Bad server address", "Bad server address", JOptionPane.ERROR_MESSAGE);
-        } else if (server != null) {
-            String username = JOptionPane.showInputDialog("Enter a username");
-            client = new WhiteboardClient(this, server, username);
+        if (server == null) {
+            System.exit(0);
+            return;
         }
+        String username = JOptionPane.showInputDialog("Enter a username");
+        if(username == null) {
+            System.exit(0);
+            return;
+        }
+        if(username.equals("")) {
+            serverError("Blank usernames are not acceptable");
+            System.exit(0);
+            return;
+        }
+        client = new WhiteboardClient(this, server, username);
     }
 
     @Override
@@ -108,6 +115,11 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
     @Override
     public void whiteboardPicked(String name) {
         client.joinWhiteboard(name);
+    }
+
+    @Override
+    public void requestedWhiteboardCreation(String name) {
+        client.createWhiteboard(name);
     }
 
     @Override

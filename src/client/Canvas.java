@@ -137,20 +137,37 @@ public class Canvas extends JPanel {
         addMouseListener(controller);
         addMouseMotionListener(controller);
     }
-    
+
+    /**
+     * Sets the current painting (but not erasing) colour.
+     * @param c The new colour.
+     */
     public void setColour(Color c)
     {
     	this.colour = c;
     }
-    
-    public void isErasing(boolean b) {
+
+    /**
+     * Sets whether we are currently erasing (true) or painting (false)
+     * @param b Whether we are erasing
+     */
+    public void setErasing(boolean b) {
         this.isErasing = b;
     }
-    
+
+    /**
+     * Sets the width of the brush for both painting and erasing.
+     * @param num The width of the brush, in pixels.
+     */
     public void setBrushStroke(int num) {
         this.brushStroke = new BasicStroke(num);
     }
 
+    /**
+     * Replaces the current content of the canvas with the given bitmap.
+     * @param bitmap An unpadded sequence of bytes describing an image of the same dimensions of this canvas in
+     *               which each set of four bytes represents one ARGB pixel.
+     */
     public void setBitmap(byte[] bitmap) {
         // Because this can get called very early.
         if (drawingBuffer == null) {
@@ -163,6 +180,9 @@ public class Canvas extends JPanel {
         repaint();
     }
 
+    /**
+     * Clears the canvas.
+     */
     public void clear() {
         if(drawingBuffer == null) return;
         drawingGraphics.setComposite(AlphaComposite.Src);

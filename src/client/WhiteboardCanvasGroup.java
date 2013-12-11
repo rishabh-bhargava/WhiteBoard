@@ -6,6 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+/**
+ * WhiteboardCanvasGroup implements a stack of two canvases. The upper canvas is drawn on by the user,
+ * and displays a transient buffer. The lower canvas shows what is reported by the server.
+ * The upper canvas can be cleared, thus showing the canonical version underneath it.
+ */
 public class WhiteboardCanvasGroup extends JLayeredPane 
 {
     private final Canvas backingCanvas;
@@ -44,7 +49,7 @@ public class WhiteboardCanvasGroup extends JLayeredPane
      * @param erasing
      */
     public void setErasing(boolean erasing) {
-        drawingCanvas.isErasing(erasing);
+        drawingCanvas.setErasing(erasing);
     }
     
     /**

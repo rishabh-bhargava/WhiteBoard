@@ -3,7 +3,6 @@ package client;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 import javax.swing.*;
 
@@ -70,7 +69,7 @@ public class WhiteboardBar extends JPanel
         	{
         		String name = JOptionPane.showInputDialog((Component)e.getSource(), "Enter a name for the new whiteboard", "New whiteboard", JOptionPane.QUESTION_MESSAGE);
                 if(name != null) {
-                    delegate.whiteboardCreated(name);
+                    delegate.requestedWhiteboardCreation(name);
                 }
 			}
         	

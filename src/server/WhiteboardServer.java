@@ -4,6 +4,9 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+/**
+ * Main class for the whiteboard server.
+ */
 public class WhiteboardServer {
     private final ServerSocket serverSocket;
     private final WhiteboardManager manager = new WhiteboardManager();

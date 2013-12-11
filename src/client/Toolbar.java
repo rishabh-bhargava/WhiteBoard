@@ -21,11 +21,11 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.DefaultTableModel;
 
 
+/**
+ * Handles the tools down the side of the user interface.
+ */
 public class Toolbar extends JPanel
 {
-    /**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	
 	private final JButton paintButton;
