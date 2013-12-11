@@ -18,7 +18,7 @@ public class Client extends Thread implements Comparable<Client> {
     private final Socket socket;
     private final WhiteboardManager manager;
     private boolean connected = true; // The connection dies when this becomes false.
-    private String username = null;
+    protected String username = null;
     private Whiteboard whiteboard;
     private PrintWriter out = null;
 
@@ -83,6 +83,7 @@ public class Client extends Thread implements Comparable<Client> {
     /**
      * Handles a message from the client.
      * (Public for testing purposes. Do not actually use.)
+     *
      * @param line The message received.
      * @return The response to send.
      * @throws ClientException
