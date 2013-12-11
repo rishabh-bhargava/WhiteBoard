@@ -1,7 +1,6 @@
 package client;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -20,6 +19,8 @@ public class WhiteboardBar extends JPanel
     private final JButton newBoardButton;
     
     private CanvasDelegate delegate = null;
+
+    private boolean ignoreWhateverSillyActionThingsHappen = false; // This flag is true while generating spurious events.
     
     /**
      * WhiteboardBar constructor
@@ -55,8 +56,8 @@ public class WhiteboardBar extends JPanel
         	@Override
 			public void actionPerformed(ActionEvent e) 
         	{
-                if(delegate != null && whiteboardsList.getSelectedItem() != null
-                        && !whiteboardsList.getSelectedItem().toString().equals(whiteboardName.getText()))
+                if(ignoreWhateverSillyActionThingsHappen) return;
+                if(delegate != null && whiteboardsList.getSelectedItem() != null)
 				    delegate.requestedWhiteboardChange(whiteboardsList.getSelectedItem().toString());
 			}
         	
@@ -67,8 +68,10 @@ public class WhiteboardBar extends JPanel
         	@Override
 			public void actionPerformed(ActionEvent e) 
         	{
-        		
-                
+        		String name = JOptionPane.showInputDialog((Component)e.getSource(), "Enter a name for the new whiteboard", "New whiteboard", JOptionPane.QUESTION_MESSAGE);
+                if(name != null) {
+                    delegate.whiteboardCreated(name);
+                }
 			}
         	
         });
@@ -84,9 +87,17 @@ public class WhiteboardBar extends JPanel
      * Set the name of the whiteboard
      * @param name : String name of whiteboard
      */
-    public void setWhiteboardName(String name) 
+    public void setWhiteboardName(final String name)
     {
-        whiteboardName.setText(name);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                whiteboardName.setText(name);
+                ignoreWhateverSillyActionThingsHappen = true;
+                whiteboardsList.setSelectedItem(name);
+                ignoreWhateverSillyActionThingsHappen = false;
+            }
+        });
     }
     
     public void setWhiteboardsList(final String[] whiteboards)
@@ -94,6 +105,7 @@ public class WhiteboardBar extends JPanel
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
+                ignoreWhateverSillyActionThingsHappen = true;
                 whiteboardsList.removeAllItems();
                 for (String whiteboard : whiteboards) {
                     System.out.println(whiteboard);
@@ -102,6 +114,7 @@ public class WhiteboardBar extends JPanel
                         whiteboardsList.setSelectedItem(whiteboard);
                     }
                 }
+                ignoreWhateverSillyActionThingsHappen = false;
             }
         });
     }
