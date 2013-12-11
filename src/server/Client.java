@@ -82,11 +82,12 @@ public class Client extends Thread implements Comparable<Client> {
 
     /**
      * Handles a message from the client.
+     * (Public for testing purposes. Do not actually use.)
      * @param line The message received.
      * @return The response to send.
      * @throws ClientException
      */
-    private String handleMessage(String line) throws ClientException {
+    public String handleMessage(String line) throws ClientException {
         if(line == null) {
             // Why would this ever happen?
             return null;

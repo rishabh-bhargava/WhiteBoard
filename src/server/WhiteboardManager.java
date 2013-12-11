@@ -11,10 +11,10 @@ public class WhiteboardManager {
     private Set<Client> clients = new HashSet<>();
 
     /**
-     * @return An array of current whiteboard names.
+     * @return An array of current whiteboard names, sorted in alphabetical order.
      */
     public synchronized String[] getWhiteboardNames() {
-        Set<String> var = whiteboards.keySet();
+        Set<String> var = new TreeSet<>(whiteboards.keySet());
         return var.toArray(new String[var.size()]);
     }
 
