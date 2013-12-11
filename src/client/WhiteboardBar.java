@@ -96,6 +96,7 @@ public class WhiteboardBar extends JPanel
     public void setWhiteboardsList(String[] whiteboards)
     {
     	whiteboardsList.removeAll();
+    	this.repaint();
     	for (String whiteboard : whiteboards)
     	{
     		whiteboardsList.addItem(whiteboard);
