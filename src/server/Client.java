@@ -6,11 +6,19 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
+/**
+ * Represents a client from the server's perspective, and handles all
+ * network communication with it.
+ * Thread safety:
+ *   - All incoming messages are on a single thread.
+ *   - Sending outgoing messages is protected by a mutex to prevent mingled messages.
+ *   - There is no externally mutable state aside from message sending.
+ */
 public class Client extends Thread implements Comparable<Client> {
     private final Socket socket;
     private final WhiteboardManager manager;
     private boolean connected = true; // The connection dies when this becomes false.
-    private String username = null;
+    protected String username = null;
     private Whiteboard whiteboard;
     private PrintWriter out = null;
 
@@ -28,7 +36,7 @@ public class Client extends Thread implements Comparable<Client> {
             for (String line = in.readLine(); line != null; line = in.readLine()) {
                 String output = null;
                 try {
-                    output = handleRequest(line);
+                    output = handleMessage(line);
                 } catch(ClientException e) {
                     out.println("ERROR " + e.getMessage());
                 }
@@ -61,12 +69,26 @@ public class Client extends Thread implements Comparable<Client> {
             }
         }
     }
-    
-    public synchronized void sendMessage(String message) {
-        out.println(message);
+
+    /**
+     * Sends a message to the client
+     * @param message The message to send.
+     */
+    public void sendMessage(String message) {
+        synchronized(out) {
+            out.println(message);
+        }
     }
-    
-    public String handleRequest(String line) throws ClientException {
+
+    /**
+     * Handles a message from the client.
+     * (Public for testing purposes. Do not actually use.)
+     *
+     * @param line The message received.
+     * @return The response to send.
+     * @throws ClientException
+     */
+    public String handleMessage(String line) throws ClientException {
         if(line == null) {
             // Why would this ever happen?
             return null;
@@ -97,7 +119,13 @@ public class Client extends Thread implements Comparable<Client> {
             return handleUnknownCommand(command);
         }
     }
-    
+
+    /**
+     * Handles a HELLO message from the client. Such messages may only be received once.
+     * @param args The client's username.
+     * @return A message indicating the available whiteboards.
+     * @throws ClientException
+     */
     private String handleHello(String args[]) throws ClientException {
         if(username != null) {
             throw new ClientException("Already said hello.");
@@ -109,12 +137,23 @@ public class Client extends Thread implements Comparable<Client> {
         manager.addClient(this);
         return "HELLO " + strJoin(manager.getWhiteboardNames());
     }
-    
+
+    /**
+     * Handles a client indicating it wishes to disconnect
+     * @param args Ignored.
+     * @return "GOODBYE"
+     */
     private String handleQuit(String args[]) {
         connected = false;
         return "GOODBYE";
     }
-    
+
+    /**
+     * Handles a JOIN message from the client.
+     * @param args One entry: The name of the whiteboard the client wishes to join
+     * @return The whiteboard's name, bitmap, and membership.
+     * @throws ClientException
+     */
     private String handleJoin(String args[]) throws ClientException {
         checkRegistered();
         if(args.length < 1) {
@@ -133,7 +172,13 @@ public class Client extends Thread implements Comparable<Client> {
             return "WHITEBOARD " + whiteboard.getName() + " " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames());
         }
     }
-    
+
+    /**
+     * Handles a CREATE message from the client.
+     * @param args One entry: the name of a whiteboard to create
+     * @return The whiteboard's name, bitmap, and membership.
+     * @throws ClientException
+     */
     private String handleCreate(String args[]) throws ClientException {
         checkRegistered();
         if(args.length < 1) {
@@ -142,14 +187,20 @@ public class Client extends Thread implements Comparable<Client> {
         synchronized(manager) {
             Whiteboard oldWhiteboard = whiteboard;
             whiteboard = manager.createWhiteboard(args[0]);
-            whiteboard.addUser(this);
             if(oldWhiteboard != null) {
-                whiteboard.removeUser(this);
+                oldWhiteboard.removeUser(this);
             }
+            whiteboard.addUser(this);
         }
         return "WHITEBOARD " + whiteboard.getName() + " " + whiteboard.getSerializedImage() + " " + strJoin(whiteboard.getUserNames());
     }
-    
+
+    /**
+     * Handles a DRAW message from the client.
+     * @param args DRAW arguments; see protocol spec.
+     * @return ACK containing the sequence number indicated in the client's message.
+     * @throws ClientException
+     */
     private String handleDraw(String[] args) throws ClientException {
         if(args.length < 3) {
             throw new ClientException("Must specify a colour, stroke size and sequence number.");
@@ -166,13 +217,24 @@ public class Client extends Thread implements Comparable<Client> {
         whiteboard.draw(colour, strokeSize, segments);
         return "ACK " + args[0];
     }
-    
+
+    /**
+     * Handles unknown commands and responds with errors
+     * @param command The unknown command
+     * @return An error message.
+     */
     private String handleUnknownCommand(String command) {
         return "ERROR " + command + " not recognised.";
     }
     
     // Why can't Java do this?
-    public static String strJoin(String[] aArr) {
+
+    /**
+     * Joins an array with spaces.
+     * @param aArr The array
+     * @return The string joined with spaces.
+     */
+    private static String strJoin(String[] aArr) {
         StringBuilder sbStr = new StringBuilder();
         for (int i = 0, il = aArr.length; i < il; i++) {
             if (i > 0)
@@ -181,14 +243,21 @@ public class Client extends Thread implements Comparable<Client> {
         }
         return sbStr.toString();
     }
-    
+
+    /**
+     * Checks if this client has registered with a successful HELLO message, and throws a ClientException
+     * if it has not.
+     * @throws ClientException
+     */
     private void checkRegistered() throws ClientException {
         if(username == null) {
             throw new ClientException("Must register before using command.");
         }
     }
-    
-    
+
+    /**
+     * @return The client's unique username.
+     */
     public String getUsername() {
         return username;
     }

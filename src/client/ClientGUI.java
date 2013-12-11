@@ -9,6 +9,10 @@ import java.util.List;
 
 import javax.swing.*;
 
+/**
+ * Provides the main GUI window.
+ * Thread safety: This has no state to directly manipulate, so cannot be unsafe.
+ */
 public class ClientGUI extends JFrame 
 {   
 

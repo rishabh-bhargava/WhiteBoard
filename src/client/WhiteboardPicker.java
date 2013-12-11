@@ -6,6 +6,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * Implements a whiteboard picker UI used at client startup.
+ * Thread safety: all operations occur in the Swing thread, so all operations are safe by default.
+ */
 public class WhiteboardPicker extends JFrame implements ActionListener {
     private final WhiteboardPickerDelegate delegate;
 

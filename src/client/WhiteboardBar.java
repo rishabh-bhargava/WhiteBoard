@@ -1,19 +1,15 @@
 package client;
 
-import java.awt.Color;
-import java.awt.Font;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
+/**
+ * Provides the bar across the top of the whiteboard.
+ * Thread safety: manipulation always happens on the Swing thread, and is thus necessarily consistent.
+ */
 public class WhiteboardBar extends JPanel 
 {
 	private static final long serialVersionUID = 1L;
@@ -26,6 +22,8 @@ public class WhiteboardBar extends JPanel
     private final JButton newBoardButton;
     
     private CanvasDelegate delegate = null;
+
+    private boolean ignoreWhateverSillyActionThingsHappen = false; // This flag is true while generating spurious events.
     
     /**
      * WhiteboardBar constructor
@@ -61,7 +59,9 @@ public class WhiteboardBar extends JPanel
         	@Override
 			public void actionPerformed(ActionEvent e) 
         	{
-				delegate.requestedWhiteboardChange(whiteboardsList.getSelectedItem().toString());			
+                if(ignoreWhateverSillyActionThingsHappen) return;
+                if(delegate != null && whiteboardsList.getSelectedItem() != null)
+				    delegate.requestedWhiteboardChange(whiteboardsList.getSelectedItem().toString());
 			}
         	
         });
@@ -71,8 +71,10 @@ public class WhiteboardBar extends JPanel
         	@Override
 			public void actionPerformed(ActionEvent e) 
         	{
-        		
-                
+        		String name = JOptionPane.showInputDialog((Component)e.getSource(), "Enter a name for the new whiteboard", "New whiteboard", JOptionPane.QUESTION_MESSAGE);
+                if(name != null) {
+                    delegate.requestedWhiteboardCreation(name);
+                }
 			}
         	
         });
@@ -88,19 +90,35 @@ public class WhiteboardBar extends JPanel
      * Set the name of the whiteboard
      * @param name : String name of whiteboard
      */
-    public void setWhiteboardName(String name) 
+    public void setWhiteboardName(final String name)
     {
-        whiteboardName.setText(name);
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                whiteboardName.setText(name);
+                ignoreWhateverSillyActionThingsHappen = true;
+                whiteboardsList.setSelectedItem(name);
+                ignoreWhateverSillyActionThingsHappen = false;
+            }
+        });
     }
     
-    public void setWhiteboardsList(String[] whiteboards)
+    public void setWhiteboardsList(final String[] whiteboards)
     {
-    	whiteboardsList.removeAll();
-    	this.repaint();
-    	for (String whiteboard : whiteboards)
-    	{
-    		whiteboardsList.addItem(whiteboard);
-    	}
-    	this.repaint();
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ignoreWhateverSillyActionThingsHappen = true;
+                whiteboardsList.removeAllItems();
+                for (String whiteboard : whiteboards) {
+                    System.out.println(whiteboard);
+                    whiteboardsList.addItem(whiteboard);
+                    if(whiteboard.equals(whiteboardName.getText())) {
+                        whiteboardsList.setSelectedItem(whiteboard);
+                    }
+                }
+                ignoreWhateverSillyActionThingsHappen = false;
+            }
+        });
     }
 }
