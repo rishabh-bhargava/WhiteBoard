@@ -28,9 +28,8 @@ public interface WhiteboardClientDelegate {
      * @param whiteboard The name of the whiteboard joined
      * @param bitmap A bitmap representing the current content of the whiteboard, in 4-byte ARGB format.
      * @param usernames An array of usernames on the current board.
-     * @param whiteboards A list of whiteboards that exist.
      */
-    public void joinedWhiteboard(String whiteboard, byte bitmap[], String usernames[], List<String> whiteboards);
+    public void joinedWhiteboard(String whiteboard, byte bitmap[], String usernames[]);
 
     /**
      * Called when the server indicates that someone drew on the whiteboard

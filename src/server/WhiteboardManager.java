@@ -4,6 +4,7 @@ import java.util.*;
 
 /**
  * Manages the lifecycle of all whiteboards on the server.
+ * Thread safety: Methods are synchronised to prevent threading issues.
  */
 public class WhiteboardManager {
     private Map<String, Whiteboard> whiteboards = new HashMap<>();

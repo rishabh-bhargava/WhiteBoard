@@ -9,6 +9,10 @@ import java.net.*;
 /**
  * Represents a client from the server's perspective, and handles all
  * network communication with it.
+ * Thread safety:
+ *   - All incoming messages are on a single thread.
+ *   - Sending outgoing messages is protected by a mutex to prevent mingled messages.
+ *   - There is no externally mutable state aside from message sending.
  */
 public class Client extends Thread implements Comparable<Client> {
     private final Socket socket;
@@ -70,8 +74,10 @@ public class Client extends Thread implements Comparable<Client> {
      * Sends a message to the client
      * @param message The message to send.
      */
-    public synchronized void sendMessage(String message) {
-        out.println(message);
+    public void sendMessage(String message) {
+        synchronized(out) {
+            out.println(message);
+        }
     }
 
     /**
@@ -80,7 +86,7 @@ public class Client extends Thread implements Comparable<Client> {
      * @return The response to send.
      * @throws ClientException
      */
-    public String handleMessage(String line) throws ClientException {
+    private String handleMessage(String line) throws ClientException {
         if(line == null) {
             // Why would this ever happen?
             return null;

@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 /**
  * Canvas represents a drawing surface that allows the user to draw
  * on it freehand, with the mouse.
+ * Thread safety: everything touching state that could be inconsistent (drawingBuffer or
+ *                drawingGraphics) uses mutexes.
  */
 public class Canvas extends JPanel {
     // image where the user's drawing is stored
@@ -159,7 +161,7 @@ public class Canvas extends JPanel {
      * Sets the width of the brush for both painting and erasing.
      * @param num The width of the brush, in pixels.
      */
-    public void setBrushStroke(int num) {
+    public synchronized void setBrushStroke(int num) {
         this.brushStroke = new BasicStroke(num);
     }
 
@@ -168,7 +170,7 @@ public class Canvas extends JPanel {
      * @param bitmap An unpadded sequence of bytes describing an image of the same dimensions of this canvas in
      *               which each set of four bytes represents one ARGB pixel.
      */
-    public void setBitmap(byte[] bitmap) {
+    public synchronized void setBitmap(byte[] bitmap) {
         // Because this can get called very early.
         if (drawingBuffer == null) {
             makeDrawingBuffer();
@@ -183,7 +185,7 @@ public class Canvas extends JPanel {
     /**
      * Clears the canvas.
      */
-    public void clear() {
+    public synchronized void clear() {
         if(drawingBuffer == null) return;
         drawingGraphics.setComposite(AlphaComposite.Src);
         drawingGraphics.setColor(new Color(0,0,0,0));

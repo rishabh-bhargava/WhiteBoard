@@ -17,6 +17,10 @@ import java.util.List;
 
 /**
  * Handles communication with the server. Runs in its own thread to avoid blocking anything.
+ * Thread safety:
+ *   - Sending messages is synchronised to prevent interleaved messages
+ *   - Access to the users and whiteboards sets is locked independently. No method ever tries to acquire both locks
+ *     simultaneously, and delegate methods are never called while the lock is held, so deadlock cannot occur.
  */
 public class WhiteboardClient extends Thread {
     private final String server; // server conncetion string
@@ -131,10 +135,13 @@ public class WhiteboardClient extends Thread {
      */
     private void handleHello(String[] args) {
         // args is a list of available whiteboards.
-        whiteboards.clear();
-        Collections.addAll(whiteboards, args);
-        delegate.whiteboardListUpdated(whiteboards.toArray(new String[whiteboards.size()]));
-        
+        String[] whiteboardArray;
+        synchronized(whiteboards) {
+            whiteboards.clear();
+            Collections.addAll(whiteboards, args);
+            whiteboardArray = whiteboards.toArray(new String[whiteboards.size()]);
+        }
+        delegate.whiteboardListUpdated(whiteboardArray);
     }
 
     /**
@@ -155,12 +162,14 @@ public class WhiteboardClient extends Thread {
         String name = args[0];
         byte[] bitmap = DatatypeConverter.parseBase64Binary(args[1]);
         String others[] = Arrays.copyOfRange(args, 2, args.length);
-        whiteboards.add(args[0]); // This is harmless if it's already there; sets have no duplicates.
-        users.clear();
-        Collections.addAll(users, others);
-        String[] whiteboardarray = getWhiteboards();
-        List<String> whiteboardlist = new ArrayList<String>(Arrays.asList(whiteboardarray)); 
-        delegate.joinedWhiteboard(name, bitmap, others, whiteboardlist);
+        synchronized(whiteboards) {
+            whiteboards.add(args[0]); // This is harmless if it's already there; sets have no duplicates.
+        }
+        synchronized(users) {
+            users.clear();
+            Collections.addAll(users, others);
+        }
+        delegate.joinedWhiteboard(name, bitmap, others);
     }
 
     /**
@@ -168,8 +177,12 @@ public class WhiteboardClient extends Thread {
      * @param args One element: the name of the user who joined.
      */
     private void handleJoin(String[] args) {
-        users.add(args[0]);
-        delegate.userListChanged(users.toArray(new String[users.size()]));
+        String[] userArray;
+        synchronized(users) {
+            users.add(args[0]);
+            userArray = users.toArray(new String[users.size()]);
+        }
+        delegate.userListChanged(userArray);
     }
 
     /**
@@ -177,8 +190,12 @@ public class WhiteboardClient extends Thread {
      * @param args One element: the name of the user who left.
      */
     private void handlePart(String[] args) {
-        users.remove(args[0]);
-        delegate.userListChanged(users.toArray(new String[users.size()]));
+        String[] userArray;
+        synchronized(users) {
+            users.remove(args[0]);
+            userArray = users.toArray(new String[users.size()]);
+        }
+        delegate.userListChanged(userArray);
     }
 
     /**
@@ -186,8 +203,12 @@ public class WhiteboardClient extends Thread {
      * @param args One element: the name of the created whiteboard.
      */
     private void handleCreated(String[] args) {
-        whiteboards.add(args[0]);
-        delegate.whiteboardListUpdated(whiteboards.toArray(new String[whiteboards.size()]));
+        String[] whiteboardArray;
+        synchronized(whiteboards) {
+            whiteboards.add(args[0]);
+            whiteboardArray = whiteboards.toArray(new String[whiteboards.size()]);
+        }
+        delegate.whiteboardListUpdated(whiteboardArray);
     }
 
     /**
@@ -254,15 +275,19 @@ public class WhiteboardClient extends Thread {
     /**
      * @return Returns an array of the usernames of users in the current whiteboard.
      */
-    public String[] getUsers() {
-        return users.toArray(new String[users.size()]);
+    public synchronized String[] getUsers() {
+        synchronized(users) {
+            return users.toArray(new String[users.size()]);
+        }
     }
 
     /**
      * @return Returns an array of the names of all known whiteboards.
      */
-    public String[] getWhiteboards() {
-        return whiteboards.toArray(new String[whiteboards.size()]);
+    public synchronized String[] getWhiteboards() {
+        synchronized(whiteboards) {
+            return whiteboards.toArray(new String[whiteboards.size()]);
+        }
     }
 
     /**
@@ -315,13 +340,15 @@ public class WhiteboardClient extends Thread {
     /**
      * Sends a message to the server
      * @param command The command to send
-     * @param args Aarguments to attach to the command, if any.
+     * @param args Arguments to attach to the command, if any.
      */
     private void sendMessageWithArgs(String command, String[] args) {
-        out.print(command);
-        for(String arg : args) {
-            out.print(" " + arg);
+        synchronized(out) {
+            out.print(command);
+            for(String arg : args) {
+                out.print(" " + arg);
+            }
+            out.println();
         }
-        out.println();
     }
 }

@@ -6,6 +6,10 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * Provides the bar across the top of the whiteboard.
+ * Thread safety: manipulation always happens on the Swing thread, and is thus necessarily consistent.
+ */
 public class WhiteboardBar extends JPanel 
 {
 	private static final long serialVersionUID = 1L;

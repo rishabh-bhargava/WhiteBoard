@@ -6,6 +6,7 @@ import java.net.*;
 
 /**
  * Main class for the whiteboard server.
+ * Thread safety: there is only one thread here.
  */
 public class WhiteboardServer {
     private final ServerSocket serverSocket;

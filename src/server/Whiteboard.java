@@ -12,6 +12,8 @@ import javax.xml.bind.DatatypeConverter;
 
 /**
  * Represents a whiteboard, as seen by the server. Tracks its name, a user list and the current state of the canvas.
+ * Thread safety: since a whiteboard may be modified concurrently by many threads, locking is used to prevent
+ * inconsistencies.
  */
 public class Whiteboard {
     private final String name;
