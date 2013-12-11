@@ -31,7 +31,7 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
      * address is null (user clicked cancel).
      */
     private void driveWhiteboard() {
-        String server = JOptionPane.showInputDialog("Give the server address", "localhost:6005");
+        String server = JOptionPane.showInputDialog("Give the server address. Default: localhost:6005", "localhost:6005");
         if (server == null) {
             System.exit(0);
             return;
