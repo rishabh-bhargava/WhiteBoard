@@ -35,6 +35,10 @@ public class WhiteboardController implements WhiteboardClientDelegate, Whiteboar
         if (server == null) {
             System.exit(0);
             return;
+        } else if (server.equals("")) {
+            serverError("Blank s are not acceptable");
+            System.exit(0);
+            return;
         }
         String username = JOptionPane.showInputDialog("Enter a username");
         if(username == null) {
