@@ -55,6 +55,7 @@ public class ServerWhiteboardManagerTest {
 
         manager.createWhiteboard("someboard");
         manager.createWhiteboard("someboard");
+        assertArrayEquals(new String[]{"someboard"}, manager.getWhiteboardNames());
     }
 
     @Test
