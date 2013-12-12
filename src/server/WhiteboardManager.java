@@ -79,4 +79,22 @@ public class WhiteboardManager {
             clients.remove(client);
         }
     }
+    
+    /**
+     * Gets the names of the clients currently connected to the manager.
+     * Used primarily for testing
+     * @return List<String> Names of clients
+     */
+    public List<String> getClientNames()
+    {
+    	synchronized (clients)
+    	{
+    		List<String> names = new ArrayList<String>();
+    		for(Client c : clients)
+    		{
+    			names.add(c.username);
+    		}
+    		return names;
+    	}
+    }
 }
