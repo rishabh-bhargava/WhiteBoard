@@ -1,14 +1,22 @@
 package tests;
 
-import org.junit.Test;
-import server.*;
-
-import java.net.Socket;
-
 import static org.junit.Assert.*;
 
-public class ServerWhiteboardManagerTest {
-    @Test(expected=ClientException.class)
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.junit.Test;
+
+import server.Client;
+import server.ClientException;
+import server.Whiteboard;
+import server.WhiteboardManager;
+
+public class ServerWhiteboardManagerTest 
+{
+    
+	@Test(expected=ClientException.class)
     public void testDuplicateClientException() throws ClientException {
         WhiteboardManager manager = new WhiteboardManager();
 
@@ -19,7 +27,8 @@ public class ServerWhiteboardManagerTest {
     }
 
     @Test
-    public void testClientRemoval() throws ClientException {
+    public void testClientRemoval() throws ClientException 
+    {
         WhiteboardManager manager = new WhiteboardManager();
 
         Client client1 = new Client(manager, new Socket());
@@ -27,6 +36,9 @@ public class ServerWhiteboardManagerTest {
         client1.handleMessage("HELLO sam");
         manager.removeClient(client1);
         client2.handleMessage("HELLO sam");
+        List<String> names = new ArrayList<String>(); 
+        names.add("sam");
+        assertTrue(manager.getClientNames().equals(names));
     }
 
     @Test
@@ -37,6 +49,10 @@ public class ServerWhiteboardManagerTest {
         Client client2 = new Client(manager, new Socket());
         client1.handleMessage("HELLO sam");
         client2.handleMessage("HELLO kate");
+        List<String> names = new ArrayList<String>();
+        names.add("kate");
+        names.add("sam");
+        assertTrue(names.equals(manager.getClientNames()));
     }
 
     @Test
