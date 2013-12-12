@@ -13,6 +13,16 @@ import server.ClientException;
 import server.Whiteboard;
 import server.WhiteboardManager;
 
+/**
+ * This class has automated tests for the Server Manager which has the list of clients and whiteboards.
+ * TESTING STRATEGY:
+ * 1. Multiple clients with same name
+ * 2. Multiple clients with different names
+ * 3. Single whiteboard
+ * 4. Multiple whiteboards with same names
+ * 5. Multiple whiteboards with different names
+ *
+ */
 public class ServerWhiteboardManagerTest 
 {
     
